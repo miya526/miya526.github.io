@@ -146,9 +146,8 @@
   @include relative-font-size(0.9375);
   color: $brand-color;
 }
-
-.footer-col {
-  margin-bottom: $spacing-unit * .5;
+.footer-center {
+  text-align: center;
 }
 
 .footer-col-1,
