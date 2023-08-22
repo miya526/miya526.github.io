@@ -2,7 +2,7 @@
 # Feel free to add content and custom Front Matter to this file.
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
-layout: page
+layout: post
 ---
 ### Hey there, 
 You've stumbled upon a tiny speck of the internet where I share a mishmash of thoughts on tech, life, and other intriguing stuff. Here, you'll find my attempt to make some semblance of sense out of the world. 
