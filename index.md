@@ -4,7 +4,8 @@
 
 layout: home
 ---
-<!-- ### Hey there,  -->
+Hey there!
+
 You've stumbled upon a tiny speck of the internet where I share a mishmash of thoughts on tech, life, and other intriguing stuff. Here, you'll find my attempt to make some semblance of sense out of the world. 
 
 Whether you have burning questions or simply fancy a friendly chat or connection, don't hesitate to reach out to me via email or by exploring the links tucked away in the footer below.
