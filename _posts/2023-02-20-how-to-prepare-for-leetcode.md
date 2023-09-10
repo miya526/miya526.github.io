@@ -1,8 +1,49 @@
 ---
 layout: post
-title: "Thoughts on how to prepare and do well in leetcode-style coding interviews"
+title: "My 2 Cents on Preparing for LeetCode-Style Coding Interviews"
 categories: tech
 ---
+## Introduction
+During a recent lunchtime conversation with my colleagues, the topic of coding interviews came up. We discussed the questions we typically ask and how we assess candidates. This piqued my interest in contemplating how to prepare effectively for coding interviews. In this post, I will share insights on how to excel in coding interviews, drawing from my experiences as both an interviewer and a candidate.
+
+## Preparing for Coding Interviews
+The ultimate goal of interview preparation is to reach a point where you can confidently tackle any algorithms and data structures questions that may come your way. To achieve this, we must determine the most effective path. I recommend thinking of yourself as a [wide and deep model](https://arxiv.org/abs/1606.07792). In other words, you should not only memorize various algorithms and data structures but also generalize your knowledge to tackle unfamiliar problems. Let's break down my recommendations into three key points.
+
+### 1. Make a Plan, Stay Motivated, and Have Fun
+Preparing for coding interviews can be an enjoyable experience if you maintain a positive mindset. Consider the preparation process as a journey. You are like a craftsman with a toolbox filled with different algorithms and data structures. Initially, your toolbox may seem empty, and you might not know how to use the tools effectively. However, with each new challenge you encounter, you learn and improve. Remember, no one is born with the ability to implement union-find with rank and path compression in less than 5 minutes. Preparation is a personal journey, so cultivate a healthy growth mindset and leave your ego behind.
+
+Creating a simple plan tailored to your needs is essential. Decide when you want to begin your interviewing journey and structure your plan accordingly. For example, you might set a goal to focus on core graph problems for this week. The plan can be based on the next section. 
+
+### 2. Do the Right Questions in the Right Way
+While the internet offers an abundance of coding questions, you likely have limited time and mental bandwidth. To optimize your preparation, focus on selecting the right questions and solving them effectively. Instead of attempting to tackle every available question, prioritize the following categories:
+
+**Core Problems:** These are like building blocks for your coding foundation. They exemplify various algorithms and data structures. While you may not encounter these exact problems in interviews due to their popularity, mastering them equips you with essential tools. I recommend exploring resources like [Neetcode 150](https://neetcode.io/roadmap) for a comprehensive list of core problems. Aim to know these questions so well that you can recognize and implement them swiftly, with occasional revisits to the challenging ones.
+
+**Random Problems:** Think of these as your improvisational exercises. These are problems you haven't encountered before, but you can likely solve them using your existing knowledge. The real challenge lies in figuring out how to apply your knowledge effectively. By doing these problems, you are challenging yourself to generalize your approaches instead to only memorize the solutions from the core problems. I recommend participating in the weekly Leetcode contest or just find random questions you haven't find before. Majority of your time should be spent on core problems and relevant problems, the next type. 
+
+**Relevant Problems:** Research problems that companies you are interviewing with have asked in the past. Think of this step as fine-tuning your knowledge. Different companies have distinct preferences in question types and approaches, so it's beneficial to familiarize yourself with their tendencies.
+
+To approach questions effectively, consider these tips:
+- Resist the urge to immediately seek answers. Embrace the discomfort of not knowing; it enhances your learning. If you find yourself stuck on a problem for about 30 minutes, consider looking at the solution. Remember, growth often stems from struggles.
+- Regardless of whether you can solve the question, always explore/look at different solutions. Think critically about their advantages and disadvantages in terms of time and space complexity, as well as scalability. Determine when to use one approach over another. Each approach is a valuable tool in your toolkit, and you can test them out by solving similar problems. This helps you generalize. 
+- When approaching a problem, analyze it thoroughly. Try to distill it down to a problem you've encountered before. Examine different approaches, and if the solution isn't immediately clear, manually run through an example and ask yourself this: 'how would a human solve this problem?'
+- Create a system to document the problems you've tackled. After each problem, add it to your system and jot down some notes. You can find a simple example in the appendix. 
+
+### 3. Be Mentally Ready
+At the end of the day, we are not machines; we are humans with feelings and emotions that can affect our performance. It's perfectly normal to experience performance anxiety, whether in coding interviews or other aspects of life. The key is acknowledging these emotions and proactively working on managing them. One effective approach is to gain more coding interview experience. Practice with companies that you may care less about, or do mock interviews with your friends.
+
+## After the Preparation
+Upon completing your intensive preparation, take pride in your hard work and newfound confidence in tackling algorithms and data structures questions during interviews. If you stumble in an interview, simply say, "Wow, that was a tough one!" Learn from the experience and move forward with more skills and knowledge. Remember, growth is a continuous journey.
+
+## During the Interview
+When I interview candidates, I evaluate them based on four dimensions: problem solving, communication, coding, and testing. Here are some strategies to help you shine during your coding interviews:
+**1. Stay Calm and Positive**: Interviews can be nerve-wracking, but remember, coding anxiety won't help. Take a deep breath, have a sip of imaginary tea, and remind yourself that you've got this! Maintain a good attitude throughout the interview. You can't control the interviewer's character, but you can control your own. Be nice.
+**2. Communicate Clearly:** Effective communication is key. Before you start writing code, discuss your thought process with the interviewer. Explain your approach, ask clarifying questions if necessary, and outline your plan. This not only demonstrates your problem-solving skills but also helps you receive valuable feedback.  There is a human interviewer on the other side for a reason. 
+**3. Break Down the Problem:** Divide complex problems into smaller, manageable parts. Solve these smaller subproblems one at a time and gradually build up to the complete solution. This approach makes the problem-solving process less overwhelming. Look at the problem from the lens of different approaches, evaluate the approaches, and select one to code while communicating with the interviewer.
+**4. Don't Write Shitty Code:** Simple. Just follow the right coding practice (naming conventions, concise comments, code reusability, etc). 
+**5. Test Your Code:** After (or during) writing your code, proactively test it thoroughly with sample inputs. Debug any errors you encounter. Consider edge cases and additional assumptions on the inputs with your interviewer. A good coder is committed to produce correct and reliable code.
+**6. Review and Optimize:** Spend time to review your code further and discuss potential places to optimize.
+**7. Other stuff:** Keep track of time. If you are stuck, ask your interviewer questions. Ask 'how's your day' at the beginning. Be interested in what the interview does for work. 
 
 ### Array & Hashing (6 problems)
 
@@ -103,6 +144,7 @@ categories: tech
 
 
 ### Backtracking (9 problems)
+
 | Problem | Difficulty | Notes
 | ------ | ------ | ------ | 
 | [Subsets](https://leetcode.com/problems/subsets/) | Medium | add new number to every subset so far
@@ -117,6 +159,7 @@ categories: tech
 
 
 ### Graphs (13 problems)
+
 | Problem | Difficulty | Notes
 | ------ | ------ | ------ | 
 | [Number of Islands](https://leetcode.com/problems/number-of-islands/) | Medium | classic dfs and union find with rank and compression
@@ -134,6 +177,7 @@ categories: tech
 | [Word Ladder](https://leetcode.com/problems/word-ladder/) | Hard | bfs with deque and iterate through word length and replacement to find next potential states
 
 ### Advanced Graphs (6 problems)
+
 | Problem | Difficulty | Notes
 | ------ | ------ | ------ | 
 | [Min Cost to Connect All Points](https://leetcode.com/problems/min-cost-to-connect-all-points/) | Medium | minimal spanning tree, use kruskal or prim (heap)
@@ -144,6 +188,7 @@ categories: tech
 | [Alien Dictionary](https://leetcode.com/problems/alien-dictionary/) | Hard | like course schedule, first build indegree and edge ds and then do topological sort
 
 ### 1-D Dynamic Programming (10 problems)
+
 | Problem | Difficulty | Notes
 | ------ | ------ | ------ | 
 | [House Robber](https://leetcode.com/problems/house-robber/) | Medium | greedy algorithm by keeping track of max for choosing current element and max for not choosing current element. 
@@ -159,6 +204,7 @@ categories: tech
 
 
 ### 2-D Dynamic Programming (11 problems)
+
 | Problem | Difficulty | Notes
 | ------ | ------ | ------ | 
 | [Unique Paths](https://leetcode.com/problems/unique-paths/) | Medium | permutation calculation
