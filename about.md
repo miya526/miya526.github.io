@@ -1,8 +1,9 @@
----
+<!-- ---
 # Feel free to add content and custom Front Matter to this file.
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
 layout: home
+title: About This Place
 ---
 Hey there!
 
@@ -15,3 +16,4 @@ Now, before you make your grand exit or proceed to explore this place, I'd like 
 > “You have brains in your head. You have feet in your shoes. You can steer yourself any direction you choose. You're on your own. And you know what you know. And YOU are the one who'll decide where to go...” ― Dr. Seuss, Oh, the Places You'll Go! 
 
 ![Seuss](/assets/images/oh_the_places.jpg)
+ -->
