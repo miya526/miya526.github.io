@@ -37,13 +37,23 @@ Upon completing your intensive preparation, take pride in your hard work and new
 
 ## During the Interview
 When I interview candidates, I evaluate them based on four dimensions: problem solving, communication, coding, and testing. Here are some strategies to help you shine during your coding interviews:
+
 **1. Stay Calm and Positive**: Interviews can be nerve-wracking, but remember, coding anxiety won't help. Take a deep breath, have a sip of imaginary tea, and remind yourself that you've got this! Maintain a good attitude throughout the interview. You can't control the interviewer's character, but you can control your own. Be nice.
+
 **2. Communicate Clearly:** Effective communication is key. Before you start writing code, discuss your thought process with the interviewer. Explain your approach, ask clarifying questions if necessary, and outline your plan. This not only demonstrates your problem-solving skills but also helps you receive valuable feedback.  There is a human interviewer on the other side for a reason. 
+
 **3. Break Down the Problem:** Divide complex problems into smaller, manageable parts. Solve these smaller subproblems one at a time and gradually build up to the complete solution. This approach makes the problem-solving process less overwhelming. Look at the problem from the lens of different approaches, evaluate the approaches, and select one to code while communicating with the interviewer.
+
 **4. Don't Write Shitty Code:** Simple. Just follow the right coding practice (naming conventions, concise comments, code reusability, etc). 
+
 **5. Test Your Code:** After (or during) writing your code, proactively test it thoroughly with sample inputs. Debug any errors you encounter. Consider edge cases and additional assumptions on the inputs with your interviewer. A good coder is committed to produce correct and reliable code.
+
 **6. Review and Optimize:** Spend time to review your code further and discuss potential places to optimize.
+
 **7. Other stuff:** Keep track of time. If you are stuck, ask your interviewer questions. Ask 'how's your day' at the beginning. Be interested in what the interview does for work. 
+
+
+## Appendix
 
 ### Array & Hashing (6 problems)
 
