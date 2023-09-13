@@ -10,8 +10,8 @@ You've stumbled upon a tiny speck of the internet where I share a mishmash of th
 
 Whether you have burning questions or simply fancy a friendly chat or connection, don't hesitate to reach out to me via email or by exploring the links tucked away in the footer below.
 
-Now, before you make your grand exit or proceed to explore this place, I'd like to leave you with a timeless quote from a venerable (yet controversial) poet.
+<!-- Now, before you make your grand exit or proceed to explore this place, I'd like to leave you with a timeless quote from a venerable (yet controversial) poet.
 
 > “You have brains in your head. You have feet in your shoes. You can steer yourself any direction you choose. You're on your own. And you know what you know. And YOU are the one who'll decide where to go...” ― Dr. Seuss, Oh, the Places You'll Go! 
 
-![Seuss](/assets/images/oh_the_places.jpg)
+![Seuss](/assets/images/oh_the_places.jpg) -->

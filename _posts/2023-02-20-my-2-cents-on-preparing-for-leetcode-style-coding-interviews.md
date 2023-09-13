@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "My 2 Cents on Preparing for LeetCode-Style Coding Interviews"
+title: "Interview Series: My 2 Cents on Preparing for LeetCode-Style Coding Interviews"
 categories: tech
 ---
 ## Introduction
