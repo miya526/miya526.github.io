@@ -1,0 +1,146 @@
+/* Reset and basic styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #fff;
+  color: #222;
+  line-height: 1.6;
+}
+
+/* Container for a centered layout */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Header wrapper */
+.header-wrapper {
+  /* Additional styling if needed */
+}
+
+/* Header main area */
+.header-main {
+  border-bottom: 1px solid #ddd;
+  padding: 1.5rem 0;
+}
+.main-title {
+  font-size: 1.75rem;
+  margin: 0;
+}
+
+/* Navigation styling */
+nav {
+  margin-top: 0.5rem;
+}
+nav a {
+  text-decoration: none;
+  color: #007acc;
+  margin-right: 1rem;
+  font-weight: 500;
+}
+nav a:hover {
+  text-decoration: underline;
+}
+
+/* Sub-header styling */
+.sub-header {
+  padding: 0.75rem 0;
+  padding-left: 1rem;  /* Adjust for alignment */
+}
+.sub-title {
+  font-size: 1.25rem;
+  color: #444;
+  margin: 0;
+}
+
+/* Posts listing on Home and Tag pages */
+.posts {
+  margin: 0;
+  padding: 0;
+}
+.post {
+  margin-bottom: 2rem;
+}
+.post a {
+  color: inherit;
+  text-decoration: none;
+}
+.post h3 {
+  font-size: 1.1rem;  /* Smaller post title */
+  margin-bottom: 0.25rem;
+}
+.post-date {
+  color: #555;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+.post-snippet {
+  margin: 0;
+}
+
+/* Tag styling for all pages */
+.tags .tag,
+.post-tags .tag {
+  display: inline-block;
+  background-color: #eee;
+  color: #333;
+  padding: 0.2em 0.5em;
+  margin-right: 0.5rem;
+  text-decoration: none;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+.tags .tag:hover,
+.post-tags .tag:hover {
+  background-color: #ddd;
+}
+
+/* Post meta for individual post pages (tags above date) */
+.post-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Post content */
+.post-content {
+  margin-top: 1rem;
+}
+
+/* About page paragraph spacing */
+.about-paragraph {
+  margin-bottom: 1.5rem;  /* Adjust the spacing as desired */
+}
+
+p {
+  margin-bottom: 1.5rem;
+}
+
+/* Remove bottom margin from the intro paragraph */
+.bullet-intro {
+  margin-bottom: 0;
+}
+
+/* Add left padding and bottom margin to the bullet list */
+.bullet-list {
+  padding-left: 1.5rem;  /* Adjust this value as needed */
+  margin-bottom: 2rem;
+}
+
+
+/* Footer styling */
+footer {
+  border-top: 1px solid #ddd;
+  padding: 1.5rem 0;
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #555;
+}

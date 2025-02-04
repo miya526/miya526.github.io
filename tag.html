@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Allen's Notes - Home</title>
+  <title>Allen's Notes - Posts Tagged</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="css/style.css">
-
   <script src="posts.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -18,7 +17,11 @@
         .then(data => { document.getElementById('footer').innerHTML = data; })
         .catch(error => console.error('Error loading footer:', error));
       
-      renderPosts("posts-container");
+      const params = new URLSearchParams(window.location.search);
+      const tag = params.get("tag");
+      document.getElementById("tag-name").textContent = tag;
+      
+      renderPosts("posts-container", tag);
     });
   </script>
 </head>
@@ -26,7 +29,7 @@
   <header id="header"></header>
   
   <div class="container sub-header">
-    <h2 class="sub-title">Posts</h2>
+    <h2 class="sub-title">Posts Tagged "<span id="tag-name"></span>"</h2>
   </div>
   
   <main class="container">
