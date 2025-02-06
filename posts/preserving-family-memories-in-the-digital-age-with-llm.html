@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Preserving Family Memories in the Digital Age with LLM - Allen's Notes</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      fetch('../header.html')
+        .then(response => response.text())
+        .then(data => { document.getElementById('header').innerHTML = data; })
+        .catch(error => console.error('Error loading header:', error));
+      fetch('../footer.html')
+        .then(response => response.text())
+        .then(data => { document.getElementById('footer').innerHTML = data; })
+        .catch(error => console.error('Error loading footer:', error));
+    });
+  </script>
+</head>
+<body>
+  <header id="header"></header>
+  
+  <!-- Sub-header for Post Page -->
+  <div class="container sub-header">
+    <h2 class="sub-title">Preserving Family Memories in the Digital Age with LLM</h2>
+  </div>
+  
+  <!-- Main Content -->
+  <main class="container">
+    <div class="post-meta">
+      <div class="post-tags">
+        <a href="../tag.html?tag=LLM" class="tag">LLM</a>
+        <a href="../tag.html?tag=Tech" class="tag">Tech</a>
+      </div>
+      <div class="post-date">February 4, 2025</div>
+    </div>
+    <article class="post-content">
+      <p>
+        Recently, it dawned on me that throughout history, the stories and information passed down about previous generations have always been subject to decay. Oral traditions fade away; photographs lose their color over time; letters and other memorabilia deteriorate. Fortunately, we are now the first generation capable of mitigating this decay. We can scan old photos to create digital copies, record voices, and capture stories with incredible fidelity. This realization made me wonder: with the advancements in AI, what is the best way to preserve our family information? While the ideal method varies from person to person, for me, it’s about storing photos, videos, and personal stories for each family member.
+      </p>
+
+      <p>
+        With this in mind, I started a project this year to leverage AI for creating family stories—even in the format of a book. The stories are very personal, so I won’t share them here, but in this post, I’ll briefly outline how you can do it too.
+      </p>
+
+      <h3>1. Recording Family Memories</h3>
+      <p>
+        The first step is to prompt your family members to talk about their past by asking thoughtful questions and recording their responses. This can be as informal as a casual conversation or as structured as a podcast. For example, I asked my mom to share as much as she could about her childhood, including funny stories with her siblings and how she met my dad. I ended up with a large amount of audio recordings filled with cherished memories.
+      </p>
+
+      <h3>2. Transcribing Audio to Text</h3>
+      <p>
+        Next, I used an audio-to-text transcription model that supports multiple languages. I chose OpenAI’s Whisper-Turbo model for this task. Although the transcription isn’t perfect, it captures most of the details accurately enough to serve as a valuable first draft.
+      </p>
+      <p class="bullet-intro">
+        Whisper leverages a classic encoder-decoder transformer architecture trained end-to-end on roughly 680,000 hours of diverse, multilingual audio data scraped from the web. The key breakthroughs include:
+      </p>
+      <ul class="bullet-list">
+        <li><strong>Massive Multilingual Dataset:</strong> Training on such a large, varied dataset helps the model generalize across different accents, languages, and noisy environments.</li>
+        <li><strong>End-to-End Learning:</strong> Audio waveforms are converted into mel spectrograms and directly fed into the model, allowing it to learn the mapping from audio to text without intermediate steps.</li>
+        <li><strong>Multitask Training:</strong> Beyond transcription, Whisper is jointly trained on tasks like translation and language identification, enriching its understanding of linguistic nuances.</li>
+        <li><strong>Sequence-to-Sequence Approach:</strong> Using cross-entropy loss, the model refines its ability to predict text sequences from audio, resulting in highly accurate transcriptions.</li>
+      </ul>
+      <p>
+        You can access the paper <a href="https://example.com" target="_blank">here</a>.
+      </p>
+      <img src="../images/whisper-model.jpg" alt="whisper-model" style="max-width: 100%; height: auto;">
+      <p></p>
+      <h3>3. Formatting and Refining the Text</h3>
+      <p>
+        The initial transcription is unformatted and may contain errors. To clean up the text, I used LLM, specifically OpenAI’s GPT-4o. I provided the following prompt:
+      </p>
+      <blockquote>
+        "You have received a transcription from an audio recording of a person sharing stories from their past. This transcription may contain some inaccuracies. Your task is to format the text and correct any errors, preserving all the original details without adding any information not present in the transcription."
+      </blockquote>
+      <p>
+        This step transforms the raw transcription into a more polished narrative, making it easier to work with in subsequent steps.
+      </p>
+
+      <h3>4. Structuring the Story</h3>
+      <p>
+        Once I had the refined text, I asked GPT-4o to organize the narrative into chapters, similar to a book. While I won’t reveal the exact prompt, the basic idea was to let the model determine a logical flow for the story—dividing it into chapters that reflect different periods or themes in the family history.
+      </p>
+
+      <h3>5. Enhancing with Visual Memories</h3>
+      <p>
+        After structuring the text into a book-like format, I manually added relevant old photos and videos to each section. In this day and age where most people cannot read for more than a couple minutes, visual elements are important.
+      </p>
+
+      <h3>6. Expanding the Project</h3>
+      <p>
+        I didn’t stop with just one family member—I also collaborated with my dad to create a narrative of his experiences. In the future, I also hope to do the same for my sibling.
+      </p>
+
+      <h3>Additional Considerations</h3>
+      <p>
+        Be very careful with the handling of your audio and text data. With AI technology advancing rapidly, it has become increasingly simple to imitate someone’s voice using only short clips. This raises potential privacy risks, so it’s crucial to secure your data and consider who might have access to it.
+      </p>
+      <p>
+        As we integrate AI into personal history preservation, it’s important to balance technological benefits with ethical considerations. Reflect on how much of the narrative should be automated versus manually curated. This ensures that the final story remains authentic and respectful of personal experiences.
+      </p>
+      <p style="text-align: center; margin: 1rem 0;">----------</p>
+      <p>
+        This ongoing project has been incredibly meaningful! I’ve learned so much about my parents’ pasts—insights I might never have discovered otherwise—and it has opened up many opportunities for deep, enriching conversations with them. I hope this guide inspires you to embark on a similar journey with your own family stories!
+      </p>
+      <p>
+        Feel free to reach out if you have any questions or need further guidance. Happy storytelling!
+      </p>
+    </article>
+  </main>
+  
+  <footer id="footer"></footer>
+</body>
+</html>

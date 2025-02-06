@@ -2,6 +2,13 @@
 
 const posts = [
   {
+    title: "Preserving Family Memories in the Digital Age with LLM",
+    url: "posts/preserving-family-memories-in-the-digital-age-with-llm.html",
+    snippet: "Discover how to use LLM to preserve family memories, transforming audio, text, and visuals into legacy.",
+    date: "February 4, 2025",
+    tags: ["LLM", "Tech"]
+  },
+  {
     title: "My 2 Cents on Preparing for LeetCode-Style Coding Interviews",
     url: "posts/my-2-cents-on-preparing-for-leetcode-style-coding-interviews.html",
     snippet: "Personal insights and strategies for effectively preparing for LeetCode-style coding interviews.",
