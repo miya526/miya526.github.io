@@ -39,13 +39,13 @@ function renderPosts(containerId, filterTag = null) {
         <a href="${post.url}">
           <h3>${post.title}</h3>
           <p class="post-date">${post.date}</p>
-          <p class="post-snippet">${post.snippet}</p>
         </a>
         <div class="tags">`;
     post.tags.forEach(tag => {
       html += `<a href="tag.html?tag=${tag}" class="tag">${tag}</a>`;
     });
     html += `</div>
+        <p class="post-snippet">${post.snippet}</p>
       </article>`;
   });
   
