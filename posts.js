@@ -14,6 +14,13 @@ const posts = [
     snippet: "Personal insights and strategies for effectively preparing for LeetCode-style coding interviews.",
     date: "February 20, 2023",
     tags: ["Interview", "Tech"]
+  },
+  {
+    title: "Inside the Ad Ecosystem: How Social Media Ads Find, Engage, and Convert",
+    url: "posts/inside-the-ad-ecosystem-how-social-media-ads-find-engage-and-convert.html",
+    snippet: "Learn how social media ads are targeted, bid, optimized, and measured to convert audiences.",
+    date: "August 15, 2022",
+    tags: ["Ads", "Tech"]
   }
   // Add more posts here as needed
 ];
