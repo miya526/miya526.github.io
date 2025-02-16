@@ -23,7 +23,7 @@ const posts = [
     tags: ["Ads", "RecSys"]
   },
   {
-    title: "Paper Reading: Bridging Memorization and Generalization with Wide & Deep Learning",
+    title: "Paper Reading: Wide &amp; Deep Learning for Recommender Systems",
     url: "posts/bridging-memorization-and-generalization-with-wide-&-deep-learning.html",
     snippet: "Learnings from <em>Wide &amp; Deep Learning for Recommender Systems</em> paper.",
     date: "June 20, 2017",
