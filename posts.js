@@ -16,9 +16,9 @@ const posts = [
     tags: ["Interview", "Tech"]
   },
   {
-    title: "Inside the Ad Ecosystem: How Social Media Ads Find, Engage, and Convert",
+    title: "Inside the Ad Ecosystem: How Social Platforms Serve You the Perfect Ad",
     url: "posts/inside-the-ad-ecosystem-how-social-media-ads-find-engage-and-convert.html",
-    snippet: "Learn how social media ads are targeted, bid, optimized, and measured to convert audiences.",
+    snippet: "Explore how social media ads are planned, targeted, and served to engage and convert users.",
     date: "August 15, 2022",
     tags: ["Ads", "Tech"]
   }
