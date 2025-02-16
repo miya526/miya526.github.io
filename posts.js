@@ -6,21 +6,28 @@ const posts = [
     url: "posts/preserving-family-memories-in-the-digital-age-with-llm.html",
     snippet: "Discover how to use LLM to preserve family memories, transforming audio, text, and visuals into legacy.",
     date: "February 4, 2025",
-    tags: ["LLM", "Tech"]
+    tags: ["LLM", "Fun"]
   },
   {
     title: "My 2 Cents on Preparing for LeetCode-Style Coding Interviews",
     url: "posts/my-2-cents-on-preparing-for-leetcode-style-coding-interviews.html",
     snippet: "Personal insights and strategies for effectively preparing for LeetCode-style coding interviews.",
     date: "February 20, 2023",
-    tags: ["Interview", "Tech"]
+    tags: ["Interview"]
   },
   {
     title: "Inside the Ad Ecosystem: How Social Platforms Serve You the Perfect Ad",
     url: "posts/inside-the-ad-ecosystem-how-social-media-ads-find-engage-and-convert.html",
     snippet: "Explore how social media ads are planned, targeted, and served to engage and convert users.",
     date: "August 15, 2022",
-    tags: ["Ads", "Tech"]
+    tags: ["Ads", "RecSys"]
+  },
+  {
+    title: "Paper Reading: Bridging Memorization and Generalization with Wide & Deep Learning",
+    url: "posts/bridging-memorization-and-generalization-with-wide-&-deep-learning.html",
+    snippet: "Learnings from <em>Wide &amp; Deep Learning for Recommender Systems</em> paper.",
+    date: "January 20, 2017",
+    tags: ["RecSys", "Paper"]
   }
   // Add more posts here as needed
 ];
