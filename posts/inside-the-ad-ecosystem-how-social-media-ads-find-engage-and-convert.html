@@ -63,6 +63,8 @@
         <li><strong>pCTR (Predicted Click-Through Rate):</strong> The likelihood that a user will click the ad.</li>
         <li><strong>pCVR (Predicted Conversion Rate):</strong> The probability that a click leads to the desired action.</li>
       </ul>
+      <img src="../images/ocpm-formula.jpg" alt="ocpm_formula" style="max-width: 100%; height: auto;">
+
       <p>
         In addition to these metrics, advertisers consider factors like customer lifetime value and return on ad spend (ROAS) when setting their bids. They work closely with creative teams to develop compelling ad copy and visuals, ensuring that the messaging resonates with the target audience. The planning stage also involves determining the campaign's duration, scheduling specific time windows for optimal engagement, and setting a total budget that aligns with overall business objectives.
       </p>
@@ -101,21 +103,23 @@
         Just like your social feed is curated by recommender algorithms, ads undergo a multi-stage ranking process to ensure that only the most relevant and effective ads are shown to users. This process is designed to balance speed with precision, ensuring that every ad contributes positively to both user experience and advertiser ROI.
       </p>
       <p>
-        <strong>Recall:</strong><br>
-        In the recall stage, the system gathers a broad pool of potential ads by applying basic filters and heuristic rules. This initial sweep considers factors such as user demographics, contextual signals, and historical ad performance.
+        <strong>Recall (aka Retrieval):</strong><br>
+        In the recall stage, the system gathers a broad pool of potential ads by applying basic filters, heuristic rules, and embedding techniques. This initial sweep considers factors such as user demographics, contextual signals, and historical ad performance.
       </p>
       <p>
-        <strong>Pre-Ranking (Coarse Ranking):</strong><br>
+        <strong>Pre-Ranking (aka Coarse Ranking aka Early Stage Ranking):</strong><br>
         A lightweight model quickly scores the candidate ads from the recall stage using simpler features and lower computational complexity, reducing the candidate set to a manageable size without sacrificing relevance.
       </p>
       <p>
-        <strong>Ranking (Fine Ranking):</strong><br>
+        <strong>Ranking (aka Fine Ranking aka Late Stage Ranking):</strong><br>
         The final stage employs sophisticated deep learning models—often using architectures like Transformers or knowledge graph techniques—to precisely predict key metrics such as <strong>pCTR</strong> and <strong>pCVR</strong>. Accuracy here is critical, as even small errors can lead to inefficient ad spend and reduced engagement.
       </p>
+      <img src="../images/cascade_ranking.jpeg" alt="cascade_ranking" style="max-width: 100%; height: auto;"> 
       <p>
         <strong>Continuous Calibration & Learning:</strong><br>
         Calibration techniques adjust model outputs to better match real-world outcomes, while continuous learning from fresh data ensures that the ranking process remains adaptive to changing user behaviors and market conditions.
       </p>
+      <img src="../images/calibration.jpg" alt="calibration" style="max-width: 100%; height: auto;">
       <p>
         By integrating these multi-stage processes, the ad ranking system acts as the heart of the ad delivery mechanism, ensuring that every ad reaches the right audience and drives meaningful engagement.
       </p>
@@ -157,7 +161,16 @@
         <strong>Game of Strategy:</strong><br>
         Similar to high-frequency trading, the system continuously monitors competitors’ behavior and market dynamics, adjusting bids in real time to ensure competitive, cost-effective ad delivery.
       </p>
-      
+      <figure>
+        <img src="../images/bidding-machine.png" 
+             alt="Bidding machine diagram showing various input signals and output bids" 
+             style="max-width: 100%; height: auto;">
+        <figcaption>
+          This diagram illustrates how the bidding machine processes input signals and outputs final bid values. For more details, see 
+          <a href="https://arxiv.org/pdf/1803.02194" target="_blank">this paper</a>.
+        </figcaption>
+      </figure>      
+      <p></p>
       <h3>6. Targeting in Action: Fine-Tuning Who Sees What</h3>
       <p>
         During the auction, targeting parameters ensure that the right audience sees the ad. By leveraging user demographics and past interactions, the system can personalize the ad experience and predict which subset of a target group is most likely to convert, maximizing the value of each impression.
@@ -223,7 +236,10 @@
       </p>
       
       <p style="text-align: center; margin: 1rem 0;">----------</p>
-      
+      <p> Putting everything together, here is a diagram of a simplified ads ecosystem.</p>
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/simplified-ad-ecosystem.jpeg" alt="simplified-ad-ecosystem" style="max-width: 200%; height: auto;">
+      </div>
       <p>
         This post provides a high-level overview of ad systems. Next time, I’ll dive into more technical details. Remember—the next time you see that eye-catching ad, it’s the result of meticulous planning, advanced targeting, continuous optimization, and a powerful mix of deep learning models and real-time controls!
       </p>
