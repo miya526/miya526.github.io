@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Paper Reading: Bridging Memorization and Generalization with Wide & Deep Learning - Allen's Notes</title>
+  <title>Paper Reading: Bridging Memorization and Generalization with Wide &amp; Deep Learning - Allen's Notes</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="../css/style.css">
@@ -23,7 +23,7 @@
   
   <!-- Sub-header for Post Page -->
   <div class="container sub-header">
-    <h2 class="sub-title">Paper Reading: Bridging Memorization and Generalization with Wide & Deep Learning</h2>
+    <h2 class="sub-title">Paper Reading: Bridging Memorization and Generalization with Wide &amp; Deep Learning</h2>
   </div>
   
   <!-- Main Content -->
@@ -35,129 +35,183 @@
       </div>
       <div class="post-date">January 20, 2017</div>
     </div>
+    
     <article class="post-content">
-        <p>Recommender systems are everywhere—from suggesting the next best TV series you’ll binge on, to showing you the perfect T-shirt you never knew you wanted. One notable approach that broke new ground in this field is <strong>Wide &amp; Deep Learning</strong>, introduced by Cheng et al. in their 2016 paper, <em>Wide &amp; Deep Learning for Recommender Systems</em>. If you’ve ever wondered how modern apps seamlessly mix “rules of thumb” with “insights from big data,” this framework might hold the key. Let’s dive in!</p>
+      <p>
+        Recommender systems are everywhere—from suggesting the next best TV series you’ll binge on, 
+        to showing you the perfect T-shirt you never knew you wanted. One notable approach that broke new ground in this field 
+        is <strong>Wide &amp; Deep Learning</strong>, introduced by Cheng et al. in their 2016 paper, 
+        <em>Wide &amp; Deep Learning for Recommender Systems</em>. If you’ve ever wondered how modern apps seamlessly mix “rules of thumb” 
+        with “insights from big data,” this framework might hold the key. Let’s dive in!
+      </p>
 
-<h2>1. Why Wide &amp; Deep?</h2>
+      <h2>1. Why Wide &amp; Deep?</h2>
 
-<p>One fundamental challenge in building recommendation models is striking the right balance between:</p>
-<ul>
-    <li><strong>Memorization</strong>: Leveraging known associations or rules learned from historical data (e.g., “Users who clicked on sports shoes are also likely to buy socks”).</li>
-    <li><strong>Generalization</strong>: Capturing deeper patterns and extrapolating beyond the immediate training data (e.g., the model learning abstract features of products that might appeal to different segments of users).</li>
-</ul>
+      <p class="bullet-intro">
+        One fundamental challenge in building recommendation models is striking the right balance between:
+      </p>
+      <ul class="bullet-list">
+        <li>
+          <strong>Memorization</strong>: Leveraging known associations or rules learned from historical data 
+          (e.g., “Users who clicked on sports shoes are also likely to buy socks”).
+        </li>
+        <li>
+          <strong>Generalization</strong>: Capturing deeper patterns and extrapolating beyond the immediate training data 
+          (e.g., the model learning abstract features of products that might appeal to different segments of users).
+        </li>
+      </ul>
 
-<p>Traditionally, linear models (like logistic regression or linear regression) do a great job at memorizing. They directly learn weights for feature-value pairs and can easily capture cross-features if hand-engineered carefully. However, they don’t always generalize to new or unseen combinations of features. Neural networks, on the other hand, excel at discovering complex feature representations and generalizing beyond what’s explicitly observed. But they can sometimes struggle to pick up trivial but important rules if not fed the right inputs.</p>
+      <p>
+        Traditionally, linear models (like logistic regression or linear regression) do a great job at memorizing. 
+        They directly learn weights for feature-value pairs and can easily capture cross-features if hand-engineered carefully. 
+        However, they don’t always generalize to new or unseen combinations of features. Neural networks, on the other hand, 
+        excel at discovering complex feature representations and generalizing beyond what’s explicitly observed. 
+        But they can sometimes struggle to pick up trivial but important rules if not fed the right inputs.
+      </p>
 
-<p><strong>Wide &amp; Deep Learning</strong> merges these strengths by combining a linear “wide” model and a deep neural network into one unified architecture. This results in a system that can both memorize known feature interactions and discover new, abstract relationships in the data.</p>
+      <p>
+        Wide &amp; Deep Learning merges these strengths by combining a linear “wide” model 
+        and a deep neural network into one unified architecture. This results in a system that can both memorize 
+        known feature interactions and discover new, abstract relationships in the data.
+      </p>
 
-<hr>
+      <h2>2. Architecture at a Glance</h2>
 
-<h2>2. Architecture at a Glance</h2>
-
-<p>The high-level idea is quite intuitive:</p>
-
-<ol>
-    <li><strong>Wide Component</strong> (a linear model):
-        <ul>
+      <p class="bullet-intro">The high-level idea is quite intuitive:</p>
+      <ul class="bullet-list">
+      <ol>
+        <li>
+          <strong>Wide Component</strong> (a linear model):
+          <ul class="bullet-list">
             <li>Takes raw features (and possibly cross-features) as inputs and feeds them into a simple, linear layer.</li>
             <li>Responsible for memorizing explicit feature interactions found in historical data.</li>
-        </ul>
-    </li>
-    <li><strong>Deep Component</strong> (a feed-forward neural network):
-        <ul>
+          </ul>
+        </li>
+        <li>
+          <strong>Deep Component</strong> (a feed-forward neural network):
+          <ul class="bullet-list">
             <li>Learns dense, low-dimensional embeddings for sparse features (such as user IDs, product IDs, or categories).</li>
             <li>Passes those embeddings through multiple hidden layers (fully connected layers with ReLU activations).</li>
             <li>Responsible for generalizing to new or less frequently seen feature combinations.</li>
-        </ul>
-    </li>
-    <li><strong>Joint Training</strong>:
-        <ul>
+          </ul>
+        </li>
+        <li>
+          <strong>Joint Training</strong>:
+          <ul class="bullet-list">
             <li>The outputs of both the Wide and Deep components are combined (summed) to produce the final prediction.</li>
             <li>The entire model is trained end-to-end using a single loss function (e.g., logistic loss for classification tasks).</li>
-        </ul>
-    </li>
-</ol>
+          </ul>
+        </li>
+      </ol>
+    </ul>
 
-<p><strong>ADD IMAGE HERE</strong> (Diagram adapted from the original paper showing the Wide &amp; Deep architecture)</p>
+      <p><strong>ADD IMAGE HERE</strong> (Diagram adapted from the original paper showing the Wide &amp; Deep architecture)</p>
 
-<p>The Wide model typically looks like a linear equation of the form:</p>
-<pre>
+      <p>The Wide model typically looks like a linear equation of the form:</p>
+      <pre>
 y_wide = w0 + Σj (wj * xj) + Σj,k (w(j,k) * (xj × xk)) + ...
-</pre>
-<p>while the Deep model is a multi-layer neural network that generates <em>y_deep</em>. The final output might look like:</p>
-<pre>
+      </pre>
+      <p>while the Deep model is a multi-layer neural network that generates <em>y_deep</em>. The final output might look like:</p>
+      <pre>
 ŷ = sigmoid(y_wide + y_deep)
-</pre>
-<p>This combination allows the model to latch onto known or easy-to-memorize associations while also uncovering new, non-linear patterns in the data.</p>
+      </pre>
+      <p>
+        This combination allows the model to latch onto known or easy-to-memorize associations while also uncovering 
+        new, non-linear patterns in the data.
+      </p>
 
-<hr>
-
-<h2>3. How It Works: The Key Building Blocks</h2>
-
-<ol>
-    <li><strong>Sparse Features and Embeddings</strong>
-        <ul>
+      <h2>3. How It Works: The Key Building Blocks</h2>
+      <p class="bullet-intro"></p>
+      <ul class="bullet-list">
+      <ol>
+        <li>
+          <strong>Sparse Features and Embeddings</strong>
+          <ul class="bullet-list">
             <li>Many recommender systems have sparse feature spaces—think of user IDs, product IDs, or individual categorical variables.</li>
             <li>Instead of one-hot encoding these directly into a huge array, each is mapped to a dense embedding vector. This is the same trick used by word embeddings in NLP.</li>
             <li>The embedding layer is crucial for the Deep component because it captures meaningful relationships between these IDs in a smaller, continuous space.</li>
-        </ul>
-    </li>
-    <li><strong>Cross Feature Engineering (for the Wide part)</strong>
-        <ul>
+          </ul>
+        </li>
+        <li>
+          <strong>Cross Feature Engineering (for the Wide part)</strong>
+          <ul class="bullet-list">
             <li>Often, domain experts hand-engineer cross-features like “(Product Category = Shoes) AND (User Age Group = 20-25)”.</li>
             <li>The Wide component directly uses such cross-features to memorize co-occurrences. This is part of why it can handle well-known patterns so effectively.</li>
-        </ul>
-    </li>
-    <li><strong>Joint Training &amp; Optimization</strong>
-        <ul>
+          </ul>
+        </li>
+        <li>
+          <strong>Joint Training &amp; Optimization</strong>
+          <ul class="bullet-list">
             <li>Both components share parameters that get updated jointly via backpropagation on the same training dataset.</li>
             <li>This synergy is a big part of what makes Wide &amp; Deep Learning powerful—it’s a single model that doesn’t require you to maintain two separate systems and then combine predictions later.</li>
-        </ul>
-    </li>
-</ol>
+          </ul>
+        </li>
+      </ol>
+    </ul>
 
-<hr>
+      <h2>4. Real-World Applications</h2>
 
-<h2>4. Real-World Applications</h2>
+      <p class="bullet-intro">
+        Cheng et al. originally applied Wide &amp; Deep to power the recommendation system for the Google Play app store. 
+        By doing this, they were able to:
+      </p>
+      <ul class="bullet-list">
+        <li>
+          Increase the accuracy of recommended apps for each user’s profile, taking into account both memorized cross-features 
+          (e.g., if you’ve frequently installed puzzle games, you might be recommended more puzzle or brain teaser games) 
+          and the ability to generalize (e.g., discovering that certain puzzle games share features with “casual” games 
+          if you enjoy quick daily challenges).
+        </li>
+        <li>
+          Reduce engineering complexity and time spent designing manual cross-features, since the deep part can learn new ones automatically.
+        </li>
+      </ul>
 
-<p>Cheng et al. originally applied Wide &amp; Deep to power the recommendation system for the Google Play app store. By doing this, they were able to:</p>
+      <p>
+        The benefit was evident in stronger offline metrics (like AUC for classification) and improved user engagement metrics in an online setting 
+        (click-through rates, installs, etc.).
+      </p>
 
-<ul>
-    <li>Increase the accuracy of recommended apps for each user’s profile, taking into account both memorized cross-features (e.g., if you’ve frequently installed puzzle games, you might be recommended more puzzle or brain teaser games) and the ability to generalize (e.g., discovering that certain puzzle games share features with “casual” games if you enjoy quick daily challenges).</li>
-    <li>Reduce engineering complexity and time spent designing manual cross-features, since the deep part can learn new ones automatically.</li>
-</ul>
+      <h2>5. Key Contributions</h2>
 
-<p>The benefit was evident in stronger offline metrics (like AUC for classification) and improved user engagement metrics in an online setting (click-through rates, installs, etc.).</p>
+      <p class="bullet-intro">Here’s a quick rundown of what I view as the paper’s main contributions:</p>
+      <ul class="bullet-list">
+      <ol>
+        <li>
+          <strong>Unified Model for Memorization and Generalization</strong>: Combining linear and deep neural network approaches 
+          in one framework elegantly addresses the well-known trade-off between learning explicit rules 
+          (“if user likes X then user also likes Y”) and discovering latent patterns in large-scale data.
+        </li>
+        <li>
+          <strong>Simplicity and Efficiency</strong>: The architecture is relatively straightforward to implement and can train 
+          on large-scale datasets efficiently. It also streamlines production deployments compared to using 
+          entirely separate models for memorization vs. generalization.
+        </li>
+        <li>
+          <strong>Successful Real-World Deployment</strong>: The paper isn’t just a theoretical exercise—it documents 
+          a successful deployment on a massive scale in Google’s recommendation systems. 
+          The improved metrics and user engagement are convincing evidence of its practical utility.
+        </li>
+      </ol>
+    </ul>
 
-<hr>
+      <h2>6. Final Thoughts</h2>
 
-<h2>5. Key Contributions</h2>
+      <p>
+        Wide &amp; Deep Learning pioneered a path that many modern recommendation and ranking models have followed since 2016. 
+        The concept of combining fast memorization of co-occurrences with the deep exploration of latent features 
+        is as important now as ever, especially when dealing with massive, dynamic datasets.
+      </p>
 
-<p>Here’s a quick rundown of what I view as the paper’s main contributions:</p>
-
-<ol>
-    <li><strong>Unified Model for Memorization and Generalization</strong>:  
-        Combining linear and deep neural network approaches in one framework elegantly addresses the well-known trade-off between learning explicit rules (“if user likes X then user also likes Y”) and discovering latent patterns in large-scale data.
-    </li>
-    <li><strong>Simplicity and Efficiency</strong>:  
-        The architecture is relatively straightforward to implement and can train on large-scale datasets efficiently. It also streamlines production deployments compared to using entirely separate models for memorization vs. generalization.
-    </li>
-    <li><strong>Successful Real-World Deployment</strong>:  
-        The paper isn’t just a theoretical exercise—it documents a successful deployment on a massive scale in Google’s recommendation systems. The improved metrics and user engagement are convincing evidence of its practical utility.
-    </li>
-</ol>
-
-<hr>
-
-<h2>6. Final Thoughts</h2>
-
-<p>Wide &amp; Deep Learning pioneered a path that many modern recommendation and ranking models have followed since 2016. The concept of combining fast memorization of co-occurrences with the deep exploration of latent features is as important now as ever, especially when dealing with massive, dynamic datasets.</p>
-
-<p>If you’re building your own recommendation system, think about how you can exploit both your historical knowledge of user-item interactions (via a wide component) and your model’s capacity for learning nuanced embeddings and patterns (via a deep component). It’s a powerful one-two punch that’s shaped the landscape of recommender systems.</p>
+      <p>
+        If you’re building your own recommendation system, think about how you can exploit both your historical knowledge 
+        of user-item interactions (via a wide component) and your model’s capacity for learning nuanced embeddings and patterns 
+        (via a deep component). It’s a powerful one-two punch that’s shaped the landscape of recommender systems.
+      </p>
 
     </article>
-</main>
+  </main>
 
-<footer id="footer"></footer>
+  <footer id="footer"></footer>
 </body>
 </html>
