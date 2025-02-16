@@ -41,8 +41,8 @@
         Recommender systems are everywhere—from suggesting the next best TV series you’ll binge on, 
         to showing you the perfect T-shirt you never knew you wanted. One notable approach that broke new ground in this field 
         is <strong>Wide &amp; Deep Learning</strong>, introduced by Cheng et al. in their 2016 paper, 
-        <em>Wide &amp; Deep Learning for Recommender Systems</em>. If you’ve ever wondered how modern apps seamlessly mix “rules of thumb” 
-        with “insights from big data,” this framework might hold the key. Let’s dive in!
+        <a href="https://arxiv.org/abs/1606.07792"><em>Wide &amp; Deep Learning for Recommender Systems</em></a>. If you’ve ever wondered how modern apps seamlessly mix “rules of thumb” 
+        with “insights from big data,” this architecture might hold the key. Let’s dive in!
       </p>
 
       <h2>1. Why Wide &amp; Deep?</h2>
@@ -60,7 +60,7 @@
           (e.g., the model learning abstract features of products that might appeal to different segments of users).
         </li>
       </ul>
-
+      <br>
       <p>
         Traditionally, linear models (like logistic regression or linear regression) do a great job at memorizing. 
         They directly learn weights for feature-value pairs and can easily capture cross-features if hand-engineered carefully. 
@@ -83,7 +83,7 @@
         <li>
           <strong>Wide Component</strong> (a linear model):
           <ul class="bullet-list">
-            <li>Takes raw features (and possibly cross-features) as inputs and feeds them into a simple, linear layer.</li>
+            <li>Takes cross-features as inputs and feeds them into a simple, linear layer.</li>
             <li>Responsible for memorizing explicit feature interactions found in historical data.</li>
           </ul>
         </li>
@@ -104,109 +104,66 @@
         </li>
       </ol>
     </ul>
-
-      <p><strong>ADD IMAGE HERE</strong> (Diagram adapted from the original paper showing the Wide &amp; Deep architecture)</p>
-
-      <p>The Wide model typically looks like a linear equation of the form:</p>
-      <pre>
-y_wide = w0 + Σj (wj * xj) + Σj,k (w(j,k) * (xj × xk)) + ...
-      </pre>
-      <p>while the Deep model is a multi-layer neural network that generates <em>y_deep</em>. The final output might look like:</p>
-      <pre>
-ŷ = sigmoid(y_wide + y_deep)
-      </pre>
+    <br>
+    <div style="display: flex; justify-content: center;">
+        <img src="../images/wide-deep-arch.png" alt="wide-deep-arch" style="max-width: 150%; height: auto;"> 
+    </div>
+      <p>For a logistic regression problem, the model’s prediction is:</p>
+      <img src="../images/wide-deep-formula.png" alt="wide-deep-formula" style="max-width: 100%; height: auto;">
       <p>
         This combination allows the model to latch onto known or easy-to-memorize associations while also uncovering 
         new, non-linear patterns in the data.
       </p>
 
-      <h2>3. How It Works: The Key Building Blocks</h2>
-      <p class="bullet-intro"></p>
+      <h2>3. Key Contributions</h2>
+      <p class="bullet-intro">Overall, there are a couple contributions from the paper:</p>
       <ul class="bullet-list">
-      <ol>
         <li>
-          <strong>Sparse Features and Embeddings</strong>
-          <ul class="bullet-list">
-            <li>Many recommender systems have sparse feature spaces—think of user IDs, product IDs, or individual categorical variables.</li>
-            <li>Instead of one-hot encoding these directly into a huge array, each is mapped to a dense embedding vector. This is the same trick used by word embeddings in NLP.</li>
-            <li>The embedding layer is crucial for the Deep component because it captures meaningful relationships between these IDs in a smaller, continuous space.</li>
-          </ul>
+          <strong>Unified Approach:</strong><br>
+          The Wide &amp; Deep model combines a linear model that memorizes direct interactions (like “gender=female” with “language=en”) with a deep neural network that learns hidden patterns from dense embeddings. This mix captures both obvious and subtle relationships.
         </li>
         <li>
-          <strong>Cross Feature Engineering (for the Wide part)</strong>
-          <ul class="bullet-list">
-            <li>Often, domain experts hand-engineer cross-features like “(Product Category = Shoes) AND (User Age Group = 20-25)”.</li>
-            <li>The Wide component directly uses such cross-features to memorize co-occurrences. This is part of why it can handle well-known patterns so effectively.</li>
-          </ul>
+          <strong>Joint Training:</strong><br>
+          Rather than training separate models and combining them later, both parts of the model are trained together. This joint approach makes the system more efficient and helps each part cover the other’s weaknesses.
         </li>
         <li>
-          <strong>Joint Training &amp; Optimization</strong>
-          <ul class="bullet-list">
-            <li>Both components share parameters that get updated jointly via backpropagation on the same training dataset.</li>
-            <li>This synergy is a big part of what makes Wide &amp; Deep Learning powerful—it’s a single model that doesn’t require you to maintain two separate systems and then combine predictions later.</li>
-          </ul>
+          <strong>Handling Sparse Data:</strong><br>
+          The Wide part uses the FTRL algorithm with L1 regularization to keep the model lean by zeroing out unimportant weights. Meanwhile, the Deep part uses AdaGrad to effectively learn from high-dimensional data.
         </li>
-      </ol>
-    </ul>
+        <li>
+          <strong>Smart Feature Integration:</strong><br>
+          The model brings together raw and transformed features—from basic numerical values to complex cross-products—providing a well-rounded view of user behavior for better recommendations.
+        </li>
+      </ul>
+    <br>
 
       <h2>4. Real-World Applications</h2>
 
       <p class="bullet-intro">
-        Cheng et al. originally applied Wide &amp; Deep to power the recommendation system for the Google Play app store. 
-        By doing this, they were able to:
+        In the paper, they applied Wide &amp; Deep to power the recommendation system for the Google Play app store. 
       </p>
       <ul class="bullet-list">
         <li>
-          Increase the accuracy of recommended apps for each user’s profile, taking into account both memorized cross-features 
-          (e.g., if you’ve frequently installed puzzle games, you might be recommended more puzzle or brain teaser games) 
-          and the ability to generalize (e.g., discovering that certain puzzle games share features with “casual” games 
-          if you enjoy quick daily challenges).
+          <strong>Data &amp; Training:</strong><br>
+          User behavior and app impression data generate training examples with binary labels. Categorical features are mapped to integer IDs and continuous features normalized. The model learns 32-dimensional embeddings, which are concatenated with dense features and passed through ReLU layers to a logistic output. A warm-start system reuses embeddings and weights for efficient retraining on billions of examples.
         </li>
         <li>
-          Reduce engineering complexity and time spent designing manual cross-features, since the deep part can learn new ones automatically.
+          <strong>Model Serving:</strong><br>
+          For each request, candidate apps are scored via a forward pass over the model. Multithreaded, parallel batch processing reduces latency to ~14 ms, even as the system scores millions of candidates per second.
+        </li>
+        <li>
+          <strong>Impact:</strong><br>
+          In A/B tests, the Wide &amp; Deep model improved app acquisition rates by +3.9% compared to a wide-only baseline and +1% over a deep-only model, demonstrating its effective blend of memorization and generalization in real-world traffic.
         </li>
       </ul>
+      <img src="../images/wide-deep-pipeline.png" alt="wide-deep-pipeline" style="max-width: 100%; height: auto;">
+      <img src="../images/wide-deep-app-arch.png" alt="wide-deep-app-arch" style="max-width: 100%; height: auto;">
+      <br>
+
+      <p style="text-align: center; margin: 1rem 0;">----------</p>
 
       <p>
-        The benefit was evident in stronger offline metrics (like AUC for classification) and improved user engagement metrics in an online setting 
-        (click-through rates, installs, etc.).
-      </p>
-
-      <h2>5. Key Contributions</h2>
-
-      <p class="bullet-intro">Here’s a quick rundown of what I view as the paper’s main contributions:</p>
-      <ul class="bullet-list">
-      <ol>
-        <li>
-          <strong>Unified Model for Memorization and Generalization</strong>: Combining linear and deep neural network approaches 
-          in one framework elegantly addresses the well-known trade-off between learning explicit rules 
-          (“if user likes X then user also likes Y”) and discovering latent patterns in large-scale data.
-        </li>
-        <li>
-          <strong>Simplicity and Efficiency</strong>: The architecture is relatively straightforward to implement and can train 
-          on large-scale datasets efficiently. It also streamlines production deployments compared to using 
-          entirely separate models for memorization vs. generalization.
-        </li>
-        <li>
-          <strong>Successful Real-World Deployment</strong>: The paper isn’t just a theoretical exercise—it documents 
-          a successful deployment on a massive scale in Google’s recommendation systems. 
-          The improved metrics and user engagement are convincing evidence of its practical utility.
-        </li>
-      </ol>
-    </ul>
-
-      <h2>6. Final Thoughts</h2>
-
-      <p>
-        Wide &amp; Deep Learning pioneered a path that many modern recommendation and ranking models have followed since 2016. 
-        The concept of combining fast memorization of co-occurrences with the deep exploration of latent features 
-        is as important now as ever, especially when dealing with massive, dynamic datasets.
-      </p>
-
-      <p>
-        If you’re building your own recommendation system, think about how you can exploit both your historical knowledge 
-        of user-item interactions (via a wide component) and your model’s capacity for learning nuanced embeddings and patterns 
-        (via a deep component). It’s a powerful one-two punch that’s shaped the landscape of recommender systems.
+        Wide & Deep Learning beautifully mirrors how we, as humans, process information. On one hand, we rely on our “memorized” knowledge—straightforward facts, associations, and past experiences—to guide familiar decisions. On the other hand, we use creativity and higher-level thinking to handle new or less obvious challenges. By blending these two paradigms into a single framework, Wide & Deep Learning gives recommender systems the best of both worlds: the reliability of established truths and the flexibility to discover novel insights.
       </p>
 
     </article>

@@ -131,8 +131,7 @@ p {
 /* Add left padding and bottom margin to the bullet list */
 .bullet-list {
   padding-left: 1.5rem;  /* Adjust this value as needed */
-  padding-bottom: 0;
-  margin-bottom: 2rem;
+  margin-bottom: 0;
 } 
 
 /* Footer styling */
