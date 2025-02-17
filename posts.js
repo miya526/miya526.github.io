@@ -29,7 +29,13 @@ const posts = [
   // post on dl
   // post on colleague paper
   // post on DIN
-  // post on youtube
+  {
+    title: "Paper Reading: Deep Neural Networks for YouTube Recommendations",
+    url: "posts/deep-neural-networks-for-youtube-recommendations.html",
+    snippet: "Learnings from <em>Deep Neural Networks for YouTube Recommendations</em> paper.",
+    date: "July 07, 2017",
+    tags: ["RecSys", "Paper"]
+  }, 
   {
     title: "Paper Reading: Wide &amp; Deep Learning for Recommender Systems",
     url: "posts/bridging-memorization-and-generalization-with-wide-&-deep-learning.html",
