@@ -33,7 +33,7 @@ const posts = [
     title: "Paper Reading: Deep Neural Networks for YouTube Recommendations",
     url: "posts/deep-neural-networks-for-youtube-recommendations.html",
     snippet: "Learnings from <em>Deep Neural Networks for YouTube Recommendations</em> paper.",
-    date: "July 07, 2017",
+    date: "November 07, 2017",
     tags: ["RecSys", "Paper"]
   }, 
   {
