@@ -1,20 +1,22 @@
 // posts.js
 
 const posts = [
+  // post on deepseek
   {
     title: "Preserving Family Memories in the Digital Age with LLM",
     url: "posts/preserving-family-memories-in-the-digital-age-with-llm.html",
     snippet: "Discover how to use LLM to preserve family memories, transforming audio, text, and visuals into legacy.",
-    date: "February 4, 2025",
+    date: "December 20, 2024",
     tags: ["LLM", "Fun"]
   },
   {
     title: "My 2 Cents on Preparing for LeetCode-Style Coding Interviews",
     url: "posts/my-2-cents-on-preparing-for-leetcode-style-coding-interviews.html",
     snippet: "Personal insights and strategies for effectively preparing for LeetCode-style coding interviews.",
-    date: "February 20, 2023",
+    date: "September 28, 2023",
     tags: ["Interview"]
   },
+  // post on more tech in ads
   {
     title: "Inside the Ad Ecosystem: How Social Platforms Serve You the Perfect Ad",
     url: "posts/inside-the-ad-ecosystem-how-social-media-ads-find-engage-and-convert.html",
@@ -22,11 +24,17 @@ const posts = [
     date: "August 15, 2022",
     tags: ["Ads", "RecSys"]
   },
+  // post on dna stuff
+  // post on fraud and stuff
+  // post on dl
+  // post on colleague paper
+  // post on DIN
+  // post on youtube
   {
     title: "Paper Reading: Wide &amp; Deep Learning for Recommender Systems",
     url: "posts/bridging-memorization-and-generalization-with-wide-&-deep-learning.html",
     snippet: "Learnings from <em>Wide &amp; Deep Learning for Recommender Systems</em> paper.",
-    date: "June 20, 2017",
+    date: "June 19, 2017",
     tags: ["RecSys", "Paper"]
   }
   // Add more posts here as needed
