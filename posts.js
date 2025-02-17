@@ -28,7 +28,13 @@ const posts = [
   // post on fraud and stuff
   // post on dl
   // post on colleague paper
-  // post on DIN
+  {
+    title: "Paper Reading: Deep Interest Network for Click-Through Rate Prediction",
+    url: "posts/deep-interest-network-for-click-through-rate-prediction.html",
+    snippet: "Learnings from <em>Deep Interest Network for Click-Through Rate Prediction</em> paper.",
+    date: "October 02, 2018",
+    tags: ["RecSys", "Paper"]
+  }, 
   {
     title: "Paper Reading: Deep Neural Networks for YouTube Recommendations",
     url: "posts/deep-neural-networks-for-youtube-recommendations.html",
