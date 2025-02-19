@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Paper Reading: Deep Learning Recommendation Model for Personalization and Recommendation Systems - Allen's Notes</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      fetch('../header.html')
+        .then(response => response.text())
+        .then(data => { document.getElementById('header').innerHTML = data; })
+        .catch(error => console.error('Error loading header:', error));
+      fetch('../footer.html')
+        .then(response => response.text())
+        .then(data => { document.getElementById('footer').innerHTML = data; })
+        .catch(error => console.error('Error loading footer:', error));
+    });
+  </script>
+</head>
+<body>
+  <header id="header"></header>
+  
+  <!-- Sub-header for Post Page -->
+  <div class="container sub-header">
+    <h2 class="sub-title">Paper Reading: Deep Learning Recommendation Model for Personalization and Recommendation Systems</h2>
+  </div>
+  
+  <!-- Main Content -->
+  <main class="container">
+    <div class="post-meta">
+      <div class="post-tags">
+        <a href="../tag.html?tag=RecSys" class="tag">RecSys</a>
+        <a href="../tag.html?tag=ML" class="tag">ML</a>
+      </div>
+      <div class="post-date">January 03, 2020</div>
+    </div>
+    
+    <article class="post-content">
+        <p>In 2019, Facebook introduced <a href=https://arxiv.org/abs/1906.00091>DLRM</a>—a state-of-the-art deep learning recommendation model that marries simplicity with industrial practicality. Unlike many academic papers that overcomplicate things, DLRM is refreshingly straightforward and geared toward real-world deployment. In this post, I’ll break down the key elements of DLRM, highlight its architectural innovations, and discuss how Facebook tackles the enormous challenges of scale and parallelism.</p>
+      
+        <h2>1. Overview of DLRM</h2>
+        <p>
+          DLRM is designed to handle both categorical and continuous data—a common scenario in recommendation systems. The model uses embedding tables to transform sparse, one-hot encoded categorical features into dense vectors, while continuous features are processed by a bottom multilayer perceptron (MLP). These two streams are later combined via an <strong>interaction layer</strong> that explicitly models feature crosses, and finally passed through a top MLP that outputs the click probability via a sigmoid activation.
+        </p>
+        
+        <div style="display: flex; justify-content: center;">
+            <img src="../images/dlrm-arch.jpg" alt="dlrm-arch" style="max-width: 100%; height: auto;"> 
+        </div>
+        <br>
+        <h2>2. Key Components and Architecture Details</h2>
+        
+        <h3>Feature Engineering</h3>
+        <p class="bullet-intro">
+          All features are divided into two types:
+        </p>
+        <ul class="bullet-list">
+          <li>
+            <strong>Sparse Features:</strong> Categorical data (IDs, categories, etc.) are transformed into one-hot vectors and then embedded into a fixed-dimensional space.
+          </li>
+          <li>
+            <strong>Dense Features:</strong> Continuous attributes (age, income, etc.) are concatenated into a feature vector and passed through an MLP to achieve an embedding of the same dimension as the sparse features.
+          </li>
+        </ul>
+        <br>
+        
+        <h3>Embedding Layers & Optional MLPs</h3>
+        <p>
+          Each categorical feature is mapped to an embedding vector using standard embedding lookups. Optionally, Facebook applies small MLPs (represented as triangles in their diagram) to further transform these embeddings based on hyperparameter choices. This flexibility allows the model to learn richer representations.
+        </p>
+        
+        <h3>Interaction Layer</h3>
+        <p>
+          The innovation here is in the explicit modeling of feature interactions. DLRM computes the dot product between every pair of embedding vectors (including the processed dense features). These pairwise interactions are then concatenated with the original dense feature outputs and passed into a top MLP. This design is reminiscent of Factorization Machines (FM) but scaled up to handle the complexity of modern recommendation systems.
+        </p>
+        
+        <h3>Top MLP & Final Prediction</h3>
+        <p>
+          After the interaction layer, the top MLP further processes the combined features and outputs a probability via a sigmoid function. This output can be interpreted as the likelihood of a click or another desired engagement metric.
+        </p>
+      
+      
+        <h2>3. Parallel Training Strategy</h2>
+        <p class="bullet-intro">
+          DLRM faces significant challenges due to the massive size of the embedding tables (often several gigabytes in memory). To overcome these constraints, Facebook employs a hybrid parallelism strategy:
+        </p>
+        
+        <ul class="bullet-list">
+          <li>
+            <strong>Model Parallelism for Embeddings:</strong> The embedding tables are distributed across multiple devices to mitigate memory bottlenecks. Each device handles only a portion of the overall embedding space, coordinated via a personalized all-to-all communication scheme (implemented via a butterfly shuffle).
+          </li>
+          <li>
+            <strong>Data Parallelism for MLPs:</strong> The MLP layers (both bottom and top) are replicated across devices. This allows for concurrent processing of mini-batches, with gradients synchronized using allreduce operations. This combination of model and data parallelism is key to efficiently training DLRM on modern hardware.
+          </li>
+        </ul>
+        
+        <div style="display: flex; justify-content: center;">
+            <img src="../images/dlrm-2.png" alt="dlrm-2" style="max-width: 100%; height: auto;"> 
+        </div>
+        <br>
+        <h2>4. Experimental Results & Performance</h2>
+        <!-- <p class="bullet-intro">
+          DLRM has been evaluated on public datasets like the Criteo Ad Kaggle dataset. Key highlights include:
+        </p>
+        <ul class="bullet-list">
+          <li>
+            <strong>Accuracy:</strong> DLRM achieves slightly higher training and validation accuracy compared to Google’s Deep & Cross Network (DCN) on the same dataset, even without extensive hyperparameter tuning.
+          </li>
+          <li>
+            <strong>Performance on Single Socket/Device:</strong> When profiling a sample DLRM model on a single socket device, the majority of computation is spent on embedding lookups and fully connected layers. The GPU dramatically reduces latency compared to the CPU.
+          </li>
+        </ul> -->
+<p>
+  DLRM was trained on Facebook’s in-house Big Basin AI platform—a high-performance CPU+GPU configuration featuring Dual Socket Intel Xeon 6138 CPU @ 2.00GHz and eight Nvidia Tesla V100 16GB GPUs. This setup, while extremely powerful, does not employ a fully distributed hardware architecture, highlighting a design choice focused on optimizing performance within a robust CPU/GPU combination.
+</p>
+<p>
+  For performance comparison, DLRM was benchmarked against Google’s 2017 <a href=https://arxiv.org/abs/1708.05123>Deep &amp; Cross Network (DCN)</a>, a model that can be seen as an evolution of the <a href=https://www.amiyazawa.com/posts/bridging-memorization-and-generalization-with-wide-&-deep-learning.html>Wide &amp; Deep approach</a>. The key innovation in DCN is the use of cross networks that replace the wide component by explicitly enhancing feature interactions. In a DCN, a single cross layer computes feature crosses by combining the cross layer’s input vector with the original input vector (along with a bias term), effectively capturing pairwise interactions at the level of individual dimensions.
+</p>
+<div style="display: flex; justify-content: center;">
+    <img src="../images/dlrm-dcn.png" alt="dlrm-dcn" style="max-width: 70%; height: auto;"> 
+</div>
+<p>
+  In contrast, DLRM adopts a different strategy for feature crossing: it computes dot products between embedding vectors from different feature domains, thereby modeling interactions at a higher level of abstraction. This difference in approach is crucial—the dot-product based method in DLRM tends to capture inter-feature relationships more effectively in certain scenarios.
+</p>
+<p>
+  When evaluated on the Criteo Ad Kaggle dataset, DLRM demonstrated slightly higher accuracy compared to DCN, although the performance differences are influenced by dataset choice and parameter tuning. Additionally, under the Adagrad optimization scheme, DLRM’s advantage becomes marginal. These results serve as a useful reference point, highlighting that while DLRM shows promising performance, its real-world impact depends on various factors including optimizer selection and dataset characteristics.
+</p>
+        
+        <div style="display: flex; justify-content: center;">
+            <img src="../images/dlrm-3.png" alt="dlrm-3" style="max-width: 100%; height: auto;"> 
+        </div>
+        <br>
+        <p style="text-align: center; margin: 1rem 0;">----------</p>
+        <p>
+          DLRM stands out as a classic example of an industrial-grade deep learning recommendation model. Its design—emphasizing clean feature separation, explicit interaction modeling, and a balanced approach to parallel training—offers a clear blueprint for building scalable recommendation systems. Whether you’re an academic researcher or an industry practitioner, DLRM provides valuable insights into managing the trade-offs between model complexity, computational efficiency, and real-world performance.
+        </p>
+    </article>
+</main>
+
+<footer id="footer"></footer>
+</body>
+</html>

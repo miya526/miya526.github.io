@@ -28,6 +28,13 @@ const posts = [
   // post on fraud and stuff
   // post on dl
   {
+    title: "Paper Reading: Deep Learning Recommendation Model for Personalization and Recommendation Systems",
+    url: "posts/deep-learning-recommendation-model-for-personalization-and-recommendation-systems.html",
+    snippet: "Learnings from <em>Deep Learning Recommendation Model for Personalization and Recommendation Systems</em> paper from Facebook.",
+    date: "January 03, 2020",
+    tags: ["RecSys", "ML"]
+  }, 
+  {
     title: "StackOverflow Tag Generation Using Asymmetric Seq2Seq with Attention and Copy Mechanisms",
     url: "posts/stackoverflow-tag-generation-using-asymmetric-seq2seq-with-attention-and-copy-mechanisms.html",
     snippet: "Asymmetric Seq2Seq with attention, copy mechanisms, and depthwise pooling for better StackOverflow tag generation",
@@ -37,21 +44,21 @@ const posts = [
   {
     title: "Paper Reading: Deep Interest Network for Click-Through Rate Prediction",
     url: "posts/deep-interest-network-for-click-through-rate-prediction.html",
-    snippet: "Learnings from <em>Deep Interest Network for Click-Through Rate Prediction</em> paper.",
+    snippet: "Learnings from <em>Deep Interest Network for Click-Through Rate Prediction</em> paper for Alibaba.",
     date: "October 02, 2018",
     tags: ["RecSys", "ML"]
   }, 
   {
     title: "Paper Reading: Deep Neural Networks for YouTube Recommendations",
     url: "posts/deep-neural-networks-for-youtube-recommendations.html",
-    snippet: "Learnings from <em>Deep Neural Networks for YouTube Recommendations</em> paper.",
+    snippet: "Learnings from <em>Deep Neural Networks for YouTube Recommendations</em> paper from Google.",
     date: "November 07, 2017",
     tags: ["RecSys", "ML"]
   }, 
   {
     title: "Paper Reading: Wide &amp; Deep Learning for Recommender Systems",
     url: "posts/bridging-memorization-and-generalization-with-wide-&-deep-learning.html",
-    snippet: "Learnings from <em>Wide &amp; Deep Learning for Recommender Systems</em> paper.",
+    snippet: "Learnings from <em>Wide &amp; Deep Learning for Recommender Systems</em> paper from Google.",
     date: "June 19, 2017",
     tags: ["RecSys", "ML"]
   }
