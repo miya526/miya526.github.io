@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Predicting Disease Risk with Machine Learning and 23andMe Data - Allen's Notes</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      fetch('../header.html')
+        .then(response => response.text())
+        .then(data => { document.getElementById('header').innerHTML = data; })
+        .catch(error => console.error('Error loading header:', error));
+      fetch('../footer.html')
+        .then(response => response.text())
+        .then(data => { document.getElementById('footer').innerHTML = data; })
+        .catch(error => console.error('Error loading footer:', error));
+    });
+  </script>
+</head>
+<body>
+  <header id="header"></header>
+  
+  <!-- Sub-header for Post Page -->
+  <div class="container sub-header">
+    <h2 class="sub-title">Predicting Disease Risk with Machine Learning and 23andMe Data</h2>
+  </div>
+  
+  <!-- Main Content -->
+  <main class="container">
+    <div class="post-meta">
+      <div class="post-tags">
+        <a href="../tag.html?tag=RecSys" class="tag">RecSys</a>
+        <a href="../tag.html?tag=ML" class="tag">ML</a>
+      </div>
+      <div class="post-date">December 28, 2020</div>
+    </div>
+    
+    <article class="post-content">
+        <p>Imagine a future where your genetic information not only reveals your ancestry but also provides insights into your risk for certain diseases. In a recent project, I explored how machine learning can predict disease risks using raw genetic data—similar to what is provided by 23andMe.</p>
+
+        <h2>The Big Idea</h2>
+        <p>Genetic factors play a significant role in many common diseases. Inherited risks can predispose individuals to conditions such as Alzheimer’s, coronary heart disease, type 1 diabetes, hypertension, and rheumatoid arthritis. With machine learning, it becomes possible to analyze complex genetic patterns and predict these risks with impressive accuracy.</p>
+      
+        <h2>What Are SNPs and GWAS?</h2>
+        <p class="bullet-intro">Before diving into the project details, it’s important to understand two key terms:</p>
+        <ul class="bullet-list">
+          <li>
+            <strong>SNP (Single Nucleotide Polymorphism):</strong> These are the most common type of genetic variation among people. Each SNP represents a difference in a single DNA building block, called a nucleotide. They can influence how humans develop diseases and respond to pathogens, chemicals, drugs, and other agents.
+          </li>
+          <li>
+            <strong>GWAS (Genome-Wide Association Study):</strong> This is a study that looks across the entire genome for small variations, like SNPs, that occur more frequently in people with a particular disease than in people without the disease. GWAS data provides a foundation for understanding genetic risk factors.
+          </li>
+        </ul>
+
+        <br>
+      
+        <h2>Building a Simulated Dataset</h2>
+<p>
+  Because obtaining real individual-level SNP data with disease labels is challenging, I simulated datasets using information from the <a href="https://www.ebi.ac.uk/gwas/" target="_blank">GWAS catalog</a>. For each disease—Alzheimer’s (EFO0000249), coronary heart disease (EFO0001645), type 1 diabetes (EFO0001359), hypertension (EFO0000537), and rheumatoid arthritis (EFO0000685)—I extracted key data points: the variant name, risk allele, risk allele frequency (RAF), and beta value (the effect size).
+</p>
+<p>
+  The simulation involved creating a population of 10,000 individuals with SNP data as features and assigning each a disease risk label (low, medium, or high). To ensure compatibility with 23andMe raw data, I intersected the SNPs in the GWAS catalog with those available from 23andMe. A separate GWAS was then conducted on the simulated data to identify the most relevant SNPs for each disease, dispersing them throughout the population based on their RAF.
+</p>
+<p>
+  An important aspect of the simulation was incorporating <em>polygenic risk scores</em> (PRS), which aggregate the effects of multiple SNPs to quantify overall genetic risk. While different age groups were simulated with varying proportions of low, medium, and high risk, this variation affected only the distribution of phenotype labels rather than the underlying PRS distribution. In other words, the simulated PRS provided a realistic baseline to understand the data, even though the final datasets excluded the actual polygenic risk score.
+</p>
+<p>
+  Additionally, bias was introduced by assigning different probabilities for the presence of specific SNPs based on an individual’s risk label. Each simulated individual was labeled as 0 (low risk), 1 (medium risk), or 2 (high risk) in the dataset, with the probability of exhibiting certain variant alleles adjusted accordingly. The resulting dataset, with binary features denoting the presence of risk alleles and a risk label for each disease, forms a robust foundation for training the machine learning models.
+</p>
+<div style="display: flex; justify-content: center;">
+    <img src="../images/gwas-1.png" alt="gwas-1" style="max-width: 70%; height: auto;"> 
+</div>
+<div style="display: flex; justify-content: center;">
+    <img src="../images/gwas-2.png" alt="gwas-2" style="max-width: 70%; height: auto;"> 
+</div>
+
+        <h2>Customizing for 23andMe</h2>
+        <p>Since 23andMe’s data doesn’t include every SNP found in the GWAS catalog, the simulation was narrowed to focus only on those SNPs present in 23andMe’s raw data. This approach makes the model more applicable for real-world scenarios, enabling users to upload their own data and receive personalized risk predictions based on their genetic makeup and age.</p>
+      
+        <h2>Tackling Five Diseases</h2>
+        <p class="bullet-intro">Models were built for the following conditions:</p>
+        <ul class="bullet-list">
+          <li>
+            <strong>Alzheimer’s Disease:</strong> Given its prevalence in older adults, three separate models were developed for different age groups (under 40, 40–60, and over 60). The Alzheimer’s model achieved an F1 score of 0.86.
+          </li>
+          <li>
+            <strong>Coronary Heart Disease:</strong> With heart disease being a leading cause of death, four age-specific models were created (under 25, 25–40, 40–60, and over 60), resulting in an impressive F1 score of 0.90.
+          </li>
+          <li>
+            <strong>Type 1 Diabetes:</strong> Despite affecting people of all ages, one model was sufficient, reaching an F1 score of 0.79.
+          </li>
+          <li>
+            <strong>Hypertension:</strong> Four age brackets were used for this condition, yielding an F1 score of 0.83.
+          </li>
+          <li>
+            <strong>Rheumatoid Arthritis:</strong> Similarly modeled in four age groups, this condition’s model achieved an F1 score of 0.78.
+          </li>
+        </ul>
+        <p>Using XGBoost—a powerful algorithm known for capturing non-linear patterns—proved effective in learning complex interactions among SNPs.</p>
+      
+        <h2>Results and Reflections</h2>
+        <p>Models built using all features from the GWAS catalog performed best. However, when restricted to the SNPs available from 23andMe, performance dipped slightly. For example, while the overall coronary heart disease model maintained high accuracy, models for type 1 diabetes and rheumatoid arthritis faced more challenges with the limited feature set.</p>
+        <p>These differences underscore the balance between data richness and real-world applicability. Although the simulated data offers valuable insights, applying these models to actual genetic datasets will be the ultimate test.</p>
+        <div style="display: flex; justify-content: center;">
+            <img src="../images/gwas-3.png" alt="gwas-3" style="max-width: 70%; height: auto;"> 
+        </div>
+        <p style="text-align: center; margin: 1rem 0;">----------</p>
+        <p>Many current genetic testing companies rely on simple rules—such as checking for the APOE ε4 variant to assess Alzheimer’s risk. Machine learning, on the other hand, can consider hundreds of genetic factors simultaneously, potentially offering more nuanced risk assessments.</p>
+        <p>Moving forward, collaborating with organizations like 23andMe to train models on real human data could transform personalized healthcare. Incorporating additional factors such as gender, diet, and lifestyle could further refine these predictive models, empowering individuals to take proactive steps in disease prevention.</p>
+      
+    </article>
+</main>
+
+<footer id="footer"></footer>
+</body>
+</html>
+

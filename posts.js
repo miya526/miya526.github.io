@@ -27,6 +27,13 @@ const posts = [
   // post on dna stuff
   // post on fraud and stuff
   {
+    title: "Predicting Disease Risk with Machine Learning and 23andMe Data",
+    url: "posts/predicting-disease-risk-with-machine-learning-and-23andme-data.html",
+    snippet: "Leveraging 23andMe genetic data and machine learning to predict individual disease risks.",
+    date: "December 28, 2020",
+    tags: ["ML", "Fun"]
+  }, 
+  {
     title: "Paper Reading: Deep Learning Recommendation Model for Personalization and Recommendation Systems",
     url: "posts/deep-learning-recommendation-model-for-personalization-and-recommendation-systems.html",
     snippet: "Learnings from <em>Deep Learning Recommendation Model for Personalization and Recommendation Systems</em> paper from Facebook.",
