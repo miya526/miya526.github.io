@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>StackOverflow Tag Generation Using Asymmetric Seq2Seq with Attention and Copy Mechanisms - Allen's Notes</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      fetch('../header.html')
+        .then(response => response.text())
+        .then(data => { document.getElementById('header').innerHTML = data; })
+        .catch(error => console.error('Error loading header:', error));
+      fetch('../footer.html')
+        .then(response => response.text())
+        .then(data => { document.getElementById('footer').innerHTML = data; })
+        .catch(error => console.error('Error loading footer:', error));
+    });
+  </script>
+</head>
+<body>
+  <header id="header"></header>
+  
+  <!-- Sub-header for Post Page -->
+  <div class="container sub-header">
+    <h2 class="sub-title">StackOverflow Tag Generation Using Asymmetric Seq2Seq with Attention and Copy Mechanisms</h2>
+  </div>
+  
+  <!-- Main Content -->
+  <main class="container">
+    <div class="post-meta">
+      <div class="post-tags">
+        <a href="../tag.html?tag=NLP" class="tag">NLP</a>
+        <a href="../tag.html?tag=ML" class="tag">ML</a>
+      </div>
+      <div class="post-date">October 02, 2018</div>
+    </div>
+    
+    <article class="post-content">
+      <h1>Revolutionizing Tag Generation on Community-based Q&amp;A Platforms with Asymmetric Seq2Seq</h1>
+
+      <p>
+        Some colleagues and I have recently been looking into the keyphrase generation problem on Community-based Question Answering (CQA) platforms, such as StackOverflow. Our work tackles the challenge of automatically generating tags for posts—a crucial task for enhancing content organization, search, and recommendation on these platforms. In our approach, we revisit the classic Encoder-Decoder (Seq2Seq) framework and introduce an asymmetric architecture that leverages both attention and copy mechanisms, as well as a novel depthwise max pooling method to better aggregate hierarchical information.
+      </p>
+
+      <h2>Problem Formalization</h2>
+      <p>
+        Suppose we have N samples in our dataset, where the i<sup>th</sup> sample is represented as the tuple (x<sup>(i)</sup>, y<sup>(i)</sup>) such that x<sup>(i)</sup> represents an input text sequence of variable length, and y<sup>(i)</sup> represents the target keyphrases. Letting T<sub>i</sub> denote the number of target keyphrases for the i<sup>th</sup> sample and L<sub>i</sub> denote the length of the i<sup>th</sup> input text sequence, we can write:
+      </p>
+      <pre>
+x^(i) = ( x₁^(i), x₂^(i), ..., x_(Lᵢ)^(i) )
+y^(i) = ( y₁^(i), y₂^(i), ..., y_(Tᵢ)^(i) )
+      </pre>
+      <p>
+        where y<sub>j</sub><sup>(i)</sup> is the j<sup>th</sup> target keyphrase of data sample i such that 
+      </p>
+      <pre>
+y_j^(i) = ( y_(j,1)^(i), y_(j,2)^(i), ..., y_(j,P₍ᵢ,ⱼ₎)^(i) )
+      </pre>
+      <p>
+        is also a sequence of words of length P<sub>i,j</sub>.
+      </p>
+      <p>
+        Our proposed method is based on sequence-to-sequence learning [Cho14][Sutskever14], where the algorithm is tasked to learn the mapping between an input sequence and a target sequence. Thus, for the i<sup>th</sup> data sample with T<sub>i</sub> target keyphrases, we simply split (x<sup>(i)</sup>, y<sup>(i)</sup>) into T<sub>i</sub> separate tuples:
+      </p>
+      <pre>
+(x^(i), y^(i)) = ( x^(i), y₁^(i) ), ( x^(i), y₂^(i) ), ..., ( x^(i), y_(Tᵢ)^(i) )
+      </pre>
+
+      <h2>Data Preprocessing and Analysis</h2>
+      <p>
+        For our dataset, we use 10% of StackOverflow's questions and answers, which StackOverflow released in 2016 and is still available on Kaggle. The dataset consists of questions, answers, and their associated tags (keyphrases) from their popular programming CQA website.
+      </p>
+
+      <h3>Data Preprocessing</h3>
+      <p class="bullet-intro">
+        The dataset is organized into three tables:
+      </p>
+      <ul class="bullet-list">
+        <li><code>Questions</code>: Contains the title, body, creation date, closed date, score, and owner ID.</li>
+        <li><code>Answers</code>: Contains the body, creation date, score, and owner ID for all the answers associated with each question.</li>
+        <li><code>Tags</code>: Contains the tags associated with each question.</li>
+      </ul>
+      <br>
+      <p>
+        Given the convenient structure of the dataset, we created a combined dataset with the three tables. Since many attributes were unimportant for our problem, we created a joined dataset containing 'Id', 'Score', 'Title', 'Body', 'Answers', and 'Tags'. The first four attributes were taken from the Questions table. For 'Answers', we found all answers corresponding to the same question (using the 'id') and concatenated them. For 'Tags', we collected the tags associated with the same question from the Tags table.
+      </p>
+      <p>
+        We combined all data from the 'Body' and 'Answers' attributes into a single feature containing all data from a given StackOverflow post. Since the data was stored in raw HTML format, we extracted the text components using the Python module <em>bs4</em> and applied basic cleaning procedures (such as substituting abbreviations and removing some HTML components not extracted by <em>bs4</em>). We then applied the standard NLTK tokenization scheme on this feature—removing special characters, stop words, and splitting on spaces or punctuation. We utilized the Python <em>nltk</em> package to obtain our stop words, taking care not to remove symbols associated with special tags such as "c#" or "asp.net". Using the tokens, we constructed a vocabulary for the entire dataset using the 50,000 most frequently occurring words. With the vocabulary and the tokenized features, we were then able to associate a word embedding vector for each unique token, which was learned from an embedding layer preceding our main model.
+      </p>
+
+      <h3>Data Analysis</h3>
+      <p>
+        The dataset from StackOverflow contains a total of 1,102,568 posts, each associated with a unique "id". There are 3,257,174 tags in total (a tag may occur multiple times) and 35,487 unique tags. Each post has up to 5 tags, and the number of tags per post is approximately modeled by a normal distribution with a mean of 2.9542 and a standard deviation of 1.2044.
+      </p>
+      <p>
+        Moreover, the frequency of the tags adheres to Zipf's law: the top 100 most frequent tags (0.28% of all unique tags) constitute 47.43% of all tags, and the top 1000 most frequent tags (2.82% of all unique tags) constitute 76.07% of all tags. In addition, 6,778 unique tags (19.10% of all unique tags) appeared only once in the dataset.
+      </p>
+      <p>
+        Furthermore, the top 10 most frequent tags (0.028% of all unique tags) constitute 22.34% of all tags. The tags are (in order): <strong>javascript</strong>, <strong>java</strong>, <strong>c#</strong>, <strong>php</strong>, <strong>android</strong>, <strong>jquery</strong>, <strong>python</strong>, <strong>html</strong>, <strong>c++</strong>, and <strong>ios</strong>. By observation, many tags seem to fall into similar Computer Science domains.
+      </p>
+      <p>
+        Building on this observation, we analyzed the likelihood of certain tags appearing together. In particular, we measured the frequency of the tag <strong>javascript</strong> co-occurring with the tags <strong>php</strong>, <strong>jquery</strong>, <strong>css</strong>, and <strong>html</strong>—all of which are related to <strong>javascript</strong>. Of the 108,637 times that <strong>javascript</strong> appeared, it co-appeared with <strong>jquery</strong> 68% of the time, with <strong>html</strong> 38% of the time, with <strong>css</strong> 17% of the time, and with <strong>php</strong> 14% of the time.
+      </p>
+
+      <h2>Methodology</h2>
+      <p>
+        In this section, we introduce our proposed model in detail. First, we provide an overview of our asymmetric Encoder-Decoder model and its application to our problem. We then discuss the details of the model as well as its attention and copying mechanisms.
+      </p>
+
+      <h3>Asymmetric Encoder-Decoder Model</h3>
+      <p>
+        The notion of asymmetrically stacked Encoder-Decoder models was previously explored by Majumdar et al. (2017) [11], and these models were shown to perform better on compression tasks. The core function of an asymmetric Encoder-Decoder model is essentially the same as its symmetric (conventional) counterpart; the encoder converts the input source text into hidden states, which are then used by the decoder to generate the corresponding keyphrases.
+      </p>
+      <p>
+        In our model, both the encoder and decoder components are implemented using LSTM layers. For simplicity, in all our experiments the decoder comprises a single unidirectional LSTM layer, while the encoder has varying configurations of LSTM layers. The hidden dimensions of all LSTM layers are kept constant, which differs from the work of Majumdar et al. where different hidden dimensions were used within the multi-layered encoder.
+      </p>
+      <p>
+        We represent our encoder with K layers as:
+      </p>
+      <pre>
+f = ( f₁, f₂, ..., fₖ )
+      </pre>
+      <p>
+        Given a variable-length input sequence <em>x</em> = ( x₁, x₂, ..., xₜ ), the encoder layers generate:
+      </p>
+      <pre>
+hₖ = ( hₖ,₁, hₖ,₂, ..., hₖ,ₜ )
+      </pre>
+      <p>
+        where hₖ,ₜ is the hidden state of the last encoder layer at time step t. For each encoder layer k at time step t, we can write:
+      </p>
+      <pre>
+hₖ,ₜ = fₖ( h₍ₖ₋₁₎,ₜ, hₖ,₍ₜ₋₁₎ )
+      </pre>
+      <p>
+        Only hₖ is fed into the attention and copying mechanisms (discussed in subsequent sections) to produce a context vector c, which we denote as:
+      </p>
+      <pre>
+c = q( hₖ,₁, hₖ,₂, ..., hₖ,ₜ )
+      </pre>
+      <p>
+        for some non-linear function q. The decoder decompresses the context vector c to generate the predicted variable-length output sequence <em>y</em> = ( y₁, y₂, ..., yₜ' ). In order to do so, the decoder, denoted by g, generates hidden states given by:
+      </p>
+      <pre>
+sₜ = g( y₍ₜ₋₁₎, s₍ₜ₋₁₎, c )
+      </pre>
+      <p>
+        where sₜ is the decoder hidden state at time step t. The predicted keyphrases are generated through a conditional language model:
+      </p>
+      <pre>
+p( yₜ | y₁,...,y₍ₜ₋₁₎, x ) = σ( y₍ₜ₋₁₎, sₜ, c )
+      </pre>
+      <p>
+        where σ denotes the softmax classifier which outputs the probabilities of all words in the vocabulary, and yₜ is the predicted word at time step t (the word associated with the highest probability after applying σ).
+      </p>
+      <p>
+        During training, both the encoder and decoder are trained to minimize the negative conditional probability (negative log likelihood) of the target sequence given the source sequence. During validation and testing, beam search is used to further refine the predicted word sequences, similar to the method described in Meng et al. (2017) [12].
+      </p>
+
+      <h3>Encoder Cell States</h3>
+      <p>
+        In our model, we propose a novel design choice for handling the final cell states of the encoder layers. In conventional symmetrically stacked architectures with K encoder and decoder layers, the final cell state of the k<sup>th</sup> encoder layer, eₖ, is typically used as the initial cell state for the corresponding k<sup>th</sup> decoder layer (see Luong et al. (2015) [10]):
+      </p>
+      <pre>
+dₖ^(0) = eₖ
+      </pre>
+      <p>
+        In our asymmetrically stacked architecture, we have the option of using only the final cell state from the last encoder layer, eₖ, as the initial cell state for our single decoder layer, i.e.:
+      </p>
+      <pre>
+d^(0) = eₖ
+      </pre>
+      <p>
+        or we can compress the information from all eₖ's into a single encoder state vector, <em>e<sub>cell</sub></em>, to be used as the initial decoder cell state:
+      </p>
+      <pre>
+d^(0) = e_cell = γ( e₁, e₂, ..., eₖ )
+      </pre>
+      <p>
+        where γ is some operator. In our experiments, we tested a simple depthwise sum operator and compared it with using d^(0) = eₖ. The results suggest that using d^(0) = e_cell significantly improves the proportion of relevant predictions; there is less variance between F₁@5 and F₁@10 scores, and we even observe instances where F₁@10 scores are higher than F₁@5 scores. The inverse was true when using d^(0) = eₖ, despite similar F₁@5 scores in both cases.
+      </p>
+      <p>
+        Encouraged by these results, our current best model implements depthwise max pooling on the encoder cell states:
+      </p>
+      <pre>
+d^(0)(i) = max { eₖ(i) } for 1 ≤ k ≤ K
+      </pre>
+      <p>
+        where d^(0)(i) denotes the i<sup>th</sup> element in the decoder's initial cell state. With this approach, we significantly outperform our baseline case where d^(0) = eₖ.
+      </p>
+      <p>
+        An intuitive explanation for this design choice is that the LSTM cell state represents the memory up to a particular time step t, storing the most relevant features. The hidden state at t is based on the memory state but is a filtered version. Since the memory state is regulated by LSTM gates, the final cell state of an LSTM layer can be interpreted as the most significant features over the entire input sequence.
+      </p>
+      <p>
+        Similar to why deeper convolutional architectures perform better in computer vision, stacked LSTM layers capture more non-linear associations due to the non-linear activations of LSTM outputs. Different LSTM layers can learn different hierarchical feature representations of the input text. Thus, the final cell state of each LSTM layer represents the most significant features within its hierarchical representation.
+      </p>
+      <p>
+        Relating this to d^(0) (the initial cell state of the decoder), setting d^(0) as the last encoder layer’s final cell state discards lower-level features from earlier encoder layers. In keyphrase generation or text summarization, lower hierarchical features may capture important information omitted by the last encoder layer, adversely affecting the decoder’s output. By applying depthwise max pooling on the final cell states of the encoder layers, we aim to select the sharpest features across layers at each time step t to feed into the decoder.
+      </p>
+      <p><strong>Note:</strong> Our current best model uses 4 unidirectional LSTM layers for the encoder.</p>
+
+      <h3>Attention Mechanism</h3>
+      <p>
+        Our model adopts a simple attention mechanism (Bahdanau et al., 2015) [1] to help the encoder better preserve contextual information from the input text. The context vector c is computed as the weighted sum of each hidden state in the last encoder layer:
+      </p>
+      <pre>
+cᵢ = Σ (αᵢ,ⱼ * hₖ,ⱼ)  for j = 1 to T
+      </pre>
+      <p>
+        where the weights are computed as:
+      </p>
+      <pre>
+αᵢ,ⱼ = exp( a(s₍ᵢ₋₁₎, hₖ,ⱼ) ) / Σ exp( a(s₍ᵢ₋₁₎, hₖ,ⱼ′) )  for j′ = 1 to T
+      </pre>
+      <p>
+        Here, a(s₍ᵢ₋₁₎, hₖ,ⱼ) is a soft-alignment scoring function measuring the similarity between the decoder hidden state at the previous time step (s₍ᵢ₋₁₎) and the encoder hidden state at time step j (hₖ,ⱼ). Empirically, our model performed marginally better when using the additive/concat scoring function, as seen in Bahdanau et al. (2015), compared to other functions like dot or 'general' (Luong et al., 2015) [10].
+      </p>
+      <p>
+        In addition, our model utilizes attentional input-feeding, where context vectors generated at the previous time step (c₍ᵢ₋₁₎) are fed as inputs to the decoder at the current time step via concatenation with the current inputs (decoder hidden state from the previous time step, s₍ᵢ₋₁₎). This informs the model about prior alignment choices.
+      </p>
+
+      <h3>Copying Mechanism</h3>
+      <p>
+        Similar to CopyRNN [12], our model adopts the copying mechanism proposed by Gu et al. (2016) [7]. This mechanism allows the model to generate keyphrases containing words not found in its vocabulary by using positional and syntactic information from the input text.
+      </p>
+      <p>
+        By incorporating the copying mechanism, the conditional language model becomes a mixture of generative and copy components:
+      </p>
+      <pre>
+p( yₜ | y₁,...,y₍ₜ₋₁₎, x ) = p<sub>g</sub>( yₜ | y₁,...,y₍ₜ₋₁₎, x ) + p<sub>c</sub>( yₜ | y₁,...,y₍ₜ₋₁₎, x )
+      </pre>
+      <p>
+        Here, p<sub>g</sub>( yₜ | y₁,...,y₍ₜ₋₁₎, x ) denotes the probability of predicting the next word using the vocabulary, and p<sub>c</sub>( yₜ | y₁,...,y₍ₜ₋₁₎, x ) denotes the probability of predicting the next word using only the input text. The original authors defined the copy component as:
+      </p>
+      <pre>
+p<sub>c</sub>( yₜ | y₁,...,y₍ₜ₋₁₎, x ) = (1/Z) * Σ [ exp( ψ<sub>c</sub>(xⱼ) ) ] for all xⱼ = yₜ, where xⱼ ∈ χ
+ψ<sub>c</sub>(xⱼ) = tanh( hₖ,ⱼ<sup>T</sup> * W<sub>c</sub> ) * sₜ
+      </pre>
+      <p>
+        In the above, ψ<sub>c</sub>(xⱼ) is the score for copying the word xⱼ, W<sub>c</sub> is a learned weight matrix with dimensions d<sub>hₖ</sub> × d<sub>s</sub>, Z is the normalization term shared by both components, and χ is the set of unique words from the input text x. For further details, please refer to Gu et al. (2016) [7].
+      </p>
+      <p>
+        Similar to the case with attention, we also perform input-feeding with the location-based context vector generated by the copying mechanism, along with input-feeding using the content-and-semantics-based context vector from the attention mechanism.
+      </p>
+
+      <h2>Experiments</h2>
+      <p>
+        This section covers the evaluation metrics used to evaluate our model, followed by our experimental results compared alongside several baselines for keyphrase extraction as well as the CopyRNN model proposed by [12], which we aimed to improve upon.
+      </p>
+
+      <h3>Evaluation Metrics</h3>
+      <p class="bullet-intro">
+        We use macro-averaged <em>precision</em>, <em>recall</em>, and <em>F₁-score</em> (F-measure) at top-5 and top-10 to evaluate the performance of the algorithms. As per the standard definitions:
+      </p>
+      <ul class="bullet-list">
+        <li><code>Precision</code>: The ratio of correctly-predicted keyphrases to all predicted keyphrases.</li>
+        <li><code>Recall</code>: The ratio of correctly-predicted keyphrases to all correct keyphrases.</li>
+        <li><code>F-measure</code>: The weighted average of <em>precision</em> and <em>recall</em>.</li>
+      </ul>
+      <p>
+        When comparing keyphrases, exact matching is used; a predicted keyphrase is considered correct if and only if it is exactly the same as the ground truth keyphrase after Porter stemming has been applied.
+      </p>
+
+      <h3>Experimental Settings</h3>
+      <p>
+        Our models were implemented using 4 unidirectional LSTM layers for the encoder and a single unidirectional LSTM for the decoder. Each LSTM used a constant hidden dimension size of 512, with a word embedding dimension of 150 that was initialized using a uniform distribution in [-0.1, 0.1]. The models were trained using the Adam optimizer [8] with an initial learning rate of 1.0 × 10<sup>-4</sup> and a dropout rate of 0.2.
+      </p>
+      <p>
+        During evaluation, we use beam search to generate the predicted keyphrases with a maximum search depth of 8 and a beam size of 32. The models were trained and periodically (once every 1000 mini-batches) evaluated on a validation dataset; training was stopped early when the model's F₁-score on the validation sets did not improve for over 10 validation steps.
+      </p>
+      <p>
+        In some experiments, we also performed training using Professor Forcing [9] at varying ratios, but we did not observe any improvement in model performance or convergence rate.
+      </p>
+
+      <h3>Experimental Results and Analysis</h3>
+      <p>
+        As comparative baselines, we tested several unsupervised methods in addition to the CopyRNN model proposed by [12]. The baselines were implemented using the <code>pke</code> Python module as proposed in [2], which included unsupervised methods such as TextRank [13], SingleRank [17], TopicRank [4], PositionRank [6], and MultipartiteRank [3], as well as supervised methods including KEA [18] and others. Results for several configurations (different depthwise operations) of our proposed model, AsymLSTM, are presented in Table 1.
+      </p>
+      <div>
+        <table border="1" cellspacing="0" cellpadding="5">
+          <tr>
+            <th>Method</th>
+            <th>Top-5 F₁</th>
+            <th>Top-10 F₁</th>
+          </tr>
+          <tr>
+            <td>TextRank</td>
+            <td>0.0878</td>
+            <td>0.0794</td>
+          </tr>
+          <tr>
+            <td>SingleRank</td>
+            <td>0.0550</td>
+            <td>0.0536</td>
+          </tr>
+          <tr>
+            <td>TopicRank</td>
+            <td>0.0538</td>
+            <td>0.0516</td>
+          </tr>
+          <tr>
+            <td>MultipartiteRank</td>
+            <td>0.0874</td>
+            <td>0.0739</td>
+          </tr>
+          <tr>
+            <td>PositionRank</td>
+            <td>0.0755</td>
+            <td>0.0693</td>
+          </tr>
+          <tr>
+            <td>CopyRNN</td>
+            <td>0.4240</td>
+            <td>0.4157</td>
+          </tr>
+          <tr>
+            <td>AsymLSTM</td>
+            <td>0.4865</td>
+            <td>0.4759</td>
+          </tr>
+          <tr>
+            <td>AsymLSTM + DepthwiseSum</td>
+            <td>0.4920</td>
+            <td>0.4878</td>
+          </tr>
+          <tr>
+            <td><strong>AsymLSTM + DepthwiseMaxPool</strong></td>
+            <td><strong>0.5198</strong></td>
+            <td><strong>0.5136</strong></td>
+          </tr>
+        </table>
+        <p>
+          <em>Table 1: F₁-scores on the StackOverflow CQA dataset.</em>
+        </p>
+      </div>
+      <p>
+        Our results in Table 1 are generally consistent with those reported in [12], indicating that CopyRNN significantly outperforms existing unsupervised keyphrase extraction methods. Moreover, our proposed architecture achieves better F₁-scores at both top-5 and top-10 than CopyRNN (which was implemented using the hyperparameter settings reported by the authors). Here, "AsymLSTM" refers to our proposed architecture (described in section "Experimental Settings") where we initialize the decoder cell state using only the last encoder layer's final cell state. "AsymLSTM + DepthwiseSum/DepthwiseMaxPool" refers to the depthwise operation applied to the final encoder cell states as described in the methodology.
+      </p>
+      <p>
+        An additional observation was that our proposed models were more resistant to overfitting compared to CopyRNN. CopyRNN recorded its peak F₁-scores within slightly fewer training iterations but then exhibited decreasing performance on validation and test sets even as training loss continued to improve. While this could be a result of overfitting, it might also be due to inconsistencies between the evaluation metrics used during testing and the optimization objective used during training; maximizing the likelihood of correctly predicting keyphrases during training may not directly correlate with better F₁-scores during evaluation. We briefly discuss this challenge in section "Training Algorithms", but for the experiments in this paper, we intentionally overlook this issue.
+      </p>
+      <p>
+        To the best of our knowledge, our model outperforms all known supervised methods on the same dataset.
+      </p>
+
+      <h2>Related Work</h2>
+      <h3>Encoder-Decoder Models</h3>
+      <p>
+        The basis of our model builds off of the Encoder-Decoder architecture first proposed by Cho et al. (2014) [5] and Sutskever et al. (2014) [16] in the problem domain of machine translation. This architecture has been widely studied in natural language processing and has proven to be a powerful tool for modeling variable-length sequences in an end-to-end manner.
+      </p>
+      <p>
+        To improve on vanilla Encoder-Decoder models, the attention mechanism proposed by Bahdanau et al. (2014) [1] has set a performance benchmark. Attention works by learning a soft-alignment that allows the model to map final outputs to their respective relevant input components (context). In addition, some studies have proposed mechanisms that utilize syntactic and positional information within the input text to extract keyphrases, such as the copying mechanism proposed by Gu et al. (2016) [7].
+      </p>
+      <p>
+        An important study conducted by Meng et al. (2017) [12] combines Encoder-Decoder models with attention and copying mechanisms in the problem domain of keyphrase generation as well. Their proposed model, CopyRNN, uses a bidirectional gated recurrent unit (GRU) as the encoder and a forward GRU as the decoder (see Cho et al. (2014) [5]). One of the main motivations of their study involves predicting absent keyphrases (keyphrases containing words that are not present in the source text). While not the primary focus of our paper, the design of our model has been heavily influenced by their work.
+      </p>
+      <h3>Training Algorithms</h3>
+      <p>
+        Although not explicitly explored in our paper, we also looked at training algorithms designed to address the incongruities between the training and evaluation of models used in similar problem domains. During training, the objective is to maximize the likelihood of predicting a keyphrase given the source text, but during evaluation, non-differentiable discrete metrics like BLEU or ROUGE (which include precision, recall, and F-measure) are used. As a result, training and evaluation performance may not exhibit strong correlation. Studies such as Paulus et al. (2017) [14] and Rennie et al. (2016) [15] have proposed the use of reinforcement learning to incorporate these evaluation metrics into the optimization objective as policies.
+      </p>
+      <h3>Asymmetric Stacked Autoencoder</h3>
+      <p>
+        We did not find many studies exploring asymmetrical designs for Encoder-Decoder models. However, one study by Majumdar et al. (2017) [11] showed that asymmetrically stacked autoencoders produced better classification accuracies than their symmetrical counterparts, and also performed better on compression tasks.
+      </p>
+
+      <h2>Conclusion</h2>
+      <p>
+        In this work, we examine various design choices to improve the performance of Encoder-Decoder models in the task of keyphrase generation. We detail the results of our findings and the effectiveness of various deep learning techniques. We found that asymmetrically stacked Encoder-Decoder models perform better than their symmetrical counterparts (even without bidirectional layers) and are still able to benefit from existing techniques such as attention and copying mechanisms.
+      </p>
+      <p>
+        Our main contribution is the introduction of depthwise max pooling on encoder cell states, and we showed empirically how this improved the performance of an asymmetric Encoder-Decoder model. We discussed the intuition behind this novel mechanism for constructing initial decoder cell state inputs, its theoretical applications, and its effectiveness in the problem domain of keyphrase generation.
+      </p>
+      <p>
+        We hope that our project brings further interest to keyphrase extraction and that our results help other NLP, machine learning, and data mining researchers in their downstream tasks. In the future, we hope to incorporate other techniques and methods such as transformer architectures and reinforcement learning, as well as adapt our approach to special domain-specific texts (e.g., programming language sections in StackOverflow CQA text). For those interested in keyphrase generation, we hope this work's contributions can serve as a solid foundation.
+      </p>
+
+      <h2>References</h2>
+      <ol>
+        <li>
+          Dzmitry Bahdanau, Kyunghyun Cho, and Yoshua Bengio. 2015. Neural Machine Translation by Jointly Learning to Align and Translate. <em>CoRR abs/1409.0473</em> (2015).
+        </li>
+        <li>
+          Florian Boudin. 2016. pke: an open source python-based keyphrase extraction toolkit. In <em>Proceedings of COLING 2016, the 26th International Conference on Computational Linguistics: System Demonstrations</em>. Osaka, Japan, 69–73. <a href="http://aclweb.org/anthology/C16-2015" target="_blank">http://aclweb.org/anthology/C16-2015</a>
+        </li>
+        <li>
+          Florian Boudin. 2018. Unsupervised Keyphrase Extraction with Multipartite Graphs. <em>CoRR abs/1803.08721</em> (2018). arXiv:1803.08721. <a href="http://arxiv.org/abs/1803.08721" target="_blank">http://arxiv.org/abs/1803.08721</a>
+        </li>
+        <li>
+          Adrien Bougouin, Florian Boudin, and BĂľatrice Daille. 2013. TopicRank: Graph-Based Topic Ranking for Keyphrase Extraction. 543–551.
+        </li>
+        <li>
+          Kyunghyun Cho, Bart van Merrienboer, Çaglar Gülçehre, Fethi Bougares, Holger Schwenk, and Yoshua Bengio. 2014. Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation. <em>CoRR abs/1406.1078</em> (2014). arXiv:1406.1078. <a href="http://arxiv.org/abs/1406.1078" target="_blank">http://arxiv.org/abs/1406.1078</a>
+        </li>
+        <li>
+          Corina Florescu and Cornelia Caragea. 2017. PositionRank: An Unsupervised Approach to Keyphrase Extraction from Scholarly Documents. 1105–1115. <a href="https://doi.org/10.18653/v1/P17-1102" target="_blank">https://doi.org/10.18653/v1/P17-1102</a>
+        </li>
+        <li>
+          Jiatao Gu, Zhengdong Lu, Hang Li, and Victor O. K. Li. 2016. Incorporating Copying Mechanism in Sequence-to-Sequence Learning. <em>CoRR abs/1603.06393</em> (2016). arXiv:1603.06393. <a href="http://arxiv.org/abs/1603.06393" target="_blank">http://arxiv.org/abs/1603.06393</a>
+        </li>
+        <li>
+          Diederik P. Kingma and Jimmy Ba. 2015. Adam: A Method for Stochastic Optimization. <em>CoRR abs/1412.6980</em> (2015).
+        </li>
+        <li>
+          Alex M. Lamb, Anirudh Goyal, Parth Goyal, Ying Zhang, Saizheng Zhang, Aaron C. Courville, and Yoshua Bengio. 2016. Professor Forcing: A New Algorithm for Training Recurrent Networks. In <em>Advances in Neural Information Processing Systems 29</em>, edited by D. D. Lee et al., 4601–4609. <a href="http://papers.nips.cc/paper/6099-professor-forcing-a-new-algorithm-for-training-recurrent-networks.pdf" target="_blank">http://papers.nips.cc/paper/6099-professor-forcing-a-new-algorithm-for-training-recurrent-networks.pdf</a>
+        </li>
+        <li>
+          Minh-Thang Luong, Hieu Pham, and Christopher D. Manning. 2015. Effective Approaches to Attention-based Neural Machine Translation. <em>CoRR abs/1508.04025</em> (2015).
+        </li>
+        <li>
+          Angshul Majumdar and Aditay Tripathi. 2017. Asymmetric Stacked Autoencoder. In <em>2017 International Joint Conference on Neural Networks (IJCNN)</em>, 911–918.
+        </li>
+        <li>
+          Rui Meng, Sanqiang Zhao, Shuguang Han, Daqing He, Peter Brusilovsky, and Yu Chi. 2017. Deep Keyphrase Generation. <em>CoRR abs/1704.06879</em> (2017). arXiv:1704.06879. <a href="http://arxiv.org/abs/1704.06879" target="_blank">http://arxiv.org/abs/1704.06879</a>
+        </li>
+        <li>
+          Rada Mihalcea and Paul Tarau. 2004. TextRank: Bringing Order Into Texts. In <em>EMNLP 2004</em>.
+        </li>
+        <li>
+          Romain Paulus, Caiming Xiong, and Richard Socher. 2017. A Deep Reinforced Model for Abstractive Summarization. <em>CoRR abs/1705.04304</em> (2017). arXiv:1705.04304. <a href="http://arxiv.org/abs/1705.04304" target="_blank">http://arxiv.org/abs/1705.04304</a>
+        </li>
+        <li>
+          Steven J. Rennie, Etienne Marcheret, Youssef Mroueh, Jarret Ross, and Vaibhava Goel. 2016. Self-critical Sequence Training for Image Captioning. <em>CoRR abs/1612.00563</em> (2016). arXiv:1612.00563. <a href="http://arxiv.org/abs/1612.00563" target="_blank">http://arxiv.org/abs/1612.00563</a>
+        </li>
+        <li>
+          Ilya Sutskever, Oriol Vinyals, and Quoc V. Le. 2014. Sequence to Sequence Learning with Neural Networks. <em>CoRR abs/1409.3215</em> (2014). arXiv:1409.3215. <a href="http://arxiv.org/abs/1409.3215" target="_blank">http://arxiv.org/abs/1409.3215</a>
+        </li>
+        <li>
+          Xiaojun Wan and Jianguo Xiao. 2008. Single Document Keyphrase Extraction Using Neighborhood Knowledge. In <em>AAAI</em>.
+        </li>
+        <li>
+          Ian H. Witten, Gordon W. Paynter, Eibe Frank, Carl Gutwin, and Craig G. Nevill-Manning. 2005. Kea: Practical Automated Keyphrase Extraction. In <em>Design and Usability of Digital Libraries: Case Studies in the Asia Pacific</em>. IGI Global, 129–152.
+        </li>
+      </ol>
+    </article>
+  </main>
+
+  <footer id="footer"></footer>
+</body>
+</html>

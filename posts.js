@@ -7,7 +7,7 @@ const posts = [
     url: "posts/preserving-family-memories-in-the-digital-age-with-llm.html",
     snippet: "Discover how to use LLM to preserve family memories, transforming audio, text, and visuals into legacy.",
     date: "December 20, 2024",
-    tags: ["LLM", "Fun"]
+    tags: ["LLM", "ML", "Fun"]
   },
   {
     title: "My 2 Cents on Preparing for LeetCode-Style Coding Interviews",
@@ -27,27 +27,33 @@ const posts = [
   // post on dna stuff
   // post on fraud and stuff
   // post on dl
-  // post on colleague paper
+  {
+    title: "StackOverflow Tag Generation Using Asymmetric Seq2Seq with Attention and Copy Mechanisms",
+    url: "posts/stackoverflow-tag-generation-using-asymmetric-seq2seq-with-attention-and-copy-mechanisms.html",
+    snippet: "Asymmetric Seq2Seq with attention, copy mechanisms, and depthwise pooling for better StackOverflow tag generation",
+    date: "June 11, 2019",
+    tags: ["NLP", "ML"]
+  }, 
   {
     title: "Paper Reading: Deep Interest Network for Click-Through Rate Prediction",
     url: "posts/deep-interest-network-for-click-through-rate-prediction.html",
     snippet: "Learnings from <em>Deep Interest Network for Click-Through Rate Prediction</em> paper.",
     date: "October 02, 2018",
-    tags: ["RecSys", "Paper"]
+    tags: ["RecSys", "ML"]
   }, 
   {
     title: "Paper Reading: Deep Neural Networks for YouTube Recommendations",
     url: "posts/deep-neural-networks-for-youtube-recommendations.html",
     snippet: "Learnings from <em>Deep Neural Networks for YouTube Recommendations</em> paper.",
     date: "November 07, 2017",
-    tags: ["RecSys", "Paper"]
+    tags: ["RecSys", "ML"]
   }, 
   {
     title: "Paper Reading: Wide &amp; Deep Learning for Recommender Systems",
     url: "posts/bridging-memorization-and-generalization-with-wide-&-deep-learning.html",
     snippet: "Learnings from <em>Wide &amp; Deep Learning for Recommender Systems</em> paper.",
     date: "June 19, 2017",
-    tags: ["RecSys", "Paper"]
+    tags: ["RecSys", "ML"]
   }
   // Add more posts here as needed
 ];
