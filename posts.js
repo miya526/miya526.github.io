@@ -26,7 +26,6 @@ const posts = [
   },
   // post on dna stuff
   // post on fraud and stuff
-  // post on dl
   {
     title: "Paper Reading: Deep Learning Recommendation Model for Personalization and Recommendation Systems",
     url: "posts/deep-learning-recommendation-model-for-personalization-and-recommendation-systems.html",
