@@ -24,7 +24,6 @@ const posts = [
     date: "August 15, 2022",
     tags: ["Ads", "RecSys"]
   },
-  // post on dna stuff
   // post on fraud and stuff
   {
     title: "Predicting Disease Risk with Machine Learning and 23andMe Data",
