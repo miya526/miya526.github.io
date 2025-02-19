@@ -33,40 +33,42 @@
         <a href="../tag.html?tag=NLP" class="tag">NLP</a>
         <a href="../tag.html?tag=ML" class="tag">ML</a>
       </div>
-      <div class="post-date">October 02, 2018</div>
+      <div class="post-date">June 11, 2019</div>
     </div>
     
     <article class="post-content">
       <h1>Revolutionizing Tag Generation on Community-based Q&amp;A Platforms with Asymmetric Seq2Seq</h1>
 
       <p>
-        Some colleagues and I have recently been looking into the keyphrase generation problem on Community-based Question Answering (CQA) platforms, such as StackOverflow. Our work tackles the challenge of automatically generating tags for posts—a crucial task for enhancing content organization, search, and recommendation on these platforms. In our approach, we revisit the classic Encoder-Decoder (Seq2Seq) framework and introduce an asymmetric architecture that leverages both attention and copy mechanisms, as well as a novel depthwise max pooling method to better aggregate hierarchical information.
+        Some colleagues and I have recently been looking into the keyphrase generation problem on Community-based Question Answering (CQA) platforms, such as StackOverflow. Our work tackles the challenge of automatically generating tags for posts—a crucial task for enhancing content organization, search, and recommendation on these platforms. In our approach, we revisit the classic Encoder-Decoder (Seq2Seq) framework and introduce an asymmetric architecture that leverages both attention and copy mechanisms, as well as a novel depthwise max pooling method to better aggregate hierarchical information. 
+        </p>
+        <p>
+        Frankly, we were too lazy to submit this work to a conference, so will share a bit of it here.
       </p>
 
       <h2>Problem Formalization</h2>
       <p>
         Suppose we have N samples in our dataset, where the i<sup>th</sup> sample is represented as the tuple (x<sup>(i)</sup>, y<sup>(i)</sup>) such that x<sup>(i)</sup> represents an input text sequence of variable length, and y<sup>(i)</sup> represents the target keyphrases. Letting T<sub>i</sub> denote the number of target keyphrases for the i<sup>th</sup> sample and L<sub>i</sub> denote the length of the i<sup>th</sup> input text sequence, we can write:
       </p>
-      <pre>
-x^(i) = ( x₁^(i), x₂^(i), ..., x_(Lᵢ)^(i) )
-y^(i) = ( y₁^(i), y₂^(i), ..., y_(Tᵢ)^(i) )
-      </pre>
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/stack-eq1.png" alt="stack-eq1" style="max-width: 30%; height: auto;">
+      </div>
       <p>
         where y<sub>j</sub><sup>(i)</sup> is the j<sup>th</sup> target keyphrase of data sample i such that 
       </p>
-      <pre>
-y_j^(i) = ( y_(j,1)^(i), y_(j,2)^(i), ..., y_(j,P₍ᵢ,ⱼ₎)^(i) )
-      </pre>
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/stack-eq2.png" alt="stack-eq2" style="max-width: 30%; height: auto;">
+      </div> 
       <p>
         is also a sequence of words of length P<sub>i,j</sub>.
       </p>
       <p>
         Our proposed method is based on sequence-to-sequence learning [Cho14][Sutskever14], where the algorithm is tasked to learn the mapping between an input sequence and a target sequence. Thus, for the i<sup>th</sup> data sample with T<sub>i</sub> target keyphrases, we simply split (x<sup>(i)</sup>, y<sup>(i)</sup>) into T<sub>i</sub> separate tuples:
       </p>
-      <pre>
-(x^(i), y^(i)) = ( x^(i), y₁^(i) ), ( x^(i), y₂^(i) ), ..., ( x^(i), y_(Tᵢ)^(i) )
-      </pre>
-
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/stack-eq3.png" alt="stack-eq3" style="max-width: 50%; height: auto;">
+      </div> 
+      <br>
       <h2>Data Preprocessing and Analysis</h2>
       <p>
         For our dataset, we use 10% of StackOverflow's questions and answers, which StackOverflow released in 2016 and is still available on Kaggle. The dataset consists of questions, answers, and their associated tags (keyphrases) from their popular programming CQA website.
@@ -118,39 +120,39 @@ y_j^(i) = ( y_(j,1)^(i), y_(j,2)^(i), ..., y_(j,P₍ᵢ,ⱼ₎)^(i) )
       <p>
         We represent our encoder with K layers as:
       </p>
-      <pre>
-f = ( f₁, f₂, ..., fₖ )
-      </pre>
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/stack-eq4.png" alt="stack-eq4" style="max-width: 20%; height: auto;">
+      </div> 
       <p>
         Given a variable-length input sequence <em>x</em> = ( x₁, x₂, ..., xₜ ), the encoder layers generate:
       </p>
-      <pre>
-hₖ = ( hₖ,₁, hₖ,₂, ..., hₖ,ₜ )
-      </pre>
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/stack-eq5.png" alt="stack-eq5" style="max-width: 30%; height: auto;">
+      </div> 
       <p>
         where hₖ,ₜ is the hidden state of the last encoder layer at time step t. For each encoder layer k at time step t, we can write:
       </p>
-      <pre>
-hₖ,ₜ = fₖ( h₍ₖ₋₁₎,ₜ, hₖ,₍ₜ₋₁₎ )
-      </pre>
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/stack-eq6.png" alt="stack-eq6" style="max-width: 30%; height: auto;">
+      </div> 
       <p>
         Only hₖ is fed into the attention and copying mechanisms (discussed in subsequent sections) to produce a context vector c, which we denote as:
       </p>
-      <pre>
-c = q( hₖ,₁, hₖ,₂, ..., hₖ,ₜ )
-      </pre>
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/stack-eq7.png" alt="stack-eq7" style="max-width: 30%; height: auto;">
+      </div> 
       <p>
         for some non-linear function q. The decoder decompresses the context vector c to generate the predicted variable-length output sequence <em>y</em> = ( y₁, y₂, ..., yₜ' ). In order to do so, the decoder, denoted by g, generates hidden states given by:
       </p>
-      <pre>
-sₜ = g( y₍ₜ₋₁₎, s₍ₜ₋₁₎, c )
-      </pre>
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/stack-eq8.png" alt="stack-eq8" style="max-width: 25%; height: auto;">
+      </div> 
       <p>
         where sₜ is the decoder hidden state at time step t. The predicted keyphrases are generated through a conditional language model:
       </p>
-      <pre>
-p( yₜ | y₁,...,y₍ₜ₋₁₎, x ) = σ( y₍ₜ₋₁₎, sₜ, c )
-      </pre>
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/stack-eq9.png" alt="stack-eq9" style="max-width: 35%; height: auto;">
+      </div> 
       <p>
         where σ denotes the softmax classifier which outputs the probabilities of all words in the vocabulary, and yₜ is the predicted word at time step t (the word associated with the highest probability after applying σ).
       </p>
@@ -162,30 +164,30 @@ p( yₜ | y₁,...,y₍ₜ₋₁₎, x ) = σ( y₍ₜ₋₁₎, sₜ, c )
       <p>
         In our model, we propose a novel design choice for handling the final cell states of the encoder layers. In conventional symmetrically stacked architectures with K encoder and decoder layers, the final cell state of the k<sup>th</sup> encoder layer, eₖ, is typically used as the initial cell state for the corresponding k<sup>th</sup> decoder layer (see Luong et al. (2015) [10]):
       </p>
-      <pre>
-dₖ^(0) = eₖ
-      </pre>
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/stack-eq10.png" alt="stack-eq10" style="max-width: 12%; height: auto;">
+      </div> 
       <p>
         In our asymmetrically stacked architecture, we have the option of using only the final cell state from the last encoder layer, eₖ, as the initial cell state for our single decoder layer, i.e.:
       </p>
-      <pre>
-d^(0) = eₖ
-      </pre>
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/stack-eq11.png" alt="stack-eq11" style="max-width: 10%; height: auto;">
+      </div> 
       <p>
         or we can compress the information from all eₖ's into a single encoder state vector, <em>e<sub>cell</sub></em>, to be used as the initial decoder cell state:
       </p>
-      <pre>
-d^(0) = e_cell = γ( e₁, e₂, ..., eₖ )
-      </pre>
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/stack-eq12.png" alt="stack-eq12" style="max-width: 30%; height: auto;">
+      </div> 
       <p>
         where γ is some operator. In our experiments, we tested a simple depthwise sum operator and compared it with using d^(0) = eₖ. The results suggest that using d^(0) = e_cell significantly improves the proportion of relevant predictions; there is less variance between F₁@5 and F₁@10 scores, and we even observe instances where F₁@10 scores are higher than F₁@5 scores. The inverse was true when using d^(0) = eₖ, despite similar F₁@5 scores in both cases.
       </p>
       <p>
         Encouraged by these results, our current best model implements depthwise max pooling on the encoder cell states:
       </p>
-      <pre>
-d^(0)(i) = max { eₖ(i) } for 1 ≤ k ≤ K
-      </pre>
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/stack-eq13.png" alt="stack-eq13" style="max-width: 22%; height: auto;">
+      </div> 
       <p>
         where d^(0)(i) denotes the i<sup>th</sup> element in the decoder's initial cell state. With this approach, we significantly outperform our baseline case where d^(0) = eₖ.
       </p>
@@ -200,26 +202,33 @@ d^(0)(i) = max { eₖ(i) } for 1 ≤ k ≤ K
       </p>
       <p><strong>Note:</strong> Our current best model uses 4 unidirectional LSTM layers for the encoder.</p>
 
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/stack-d1.png" alt="stack-d1" style="max-width: 80%; height: auto;">
+      </div>
+      <br> 
       <h3>Attention Mechanism</h3>
       <p>
         Our model adopts a simple attention mechanism (Bahdanau et al., 2015) [1] to help the encoder better preserve contextual information from the input text. The context vector c is computed as the weighted sum of each hidden state in the last encoder layer:
       </p>
-      <pre>
-cᵢ = Σ (αᵢ,ⱼ * hₖ,ⱼ)  for j = 1 to T
-      </pre>
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/stack-eq14.png" alt="stack-eq14" style="max-width: 18%; height: auto;">
+      </div> 
       <p>
         where the weights are computed as:
       </p>
-      <pre>
-αᵢ,ⱼ = exp( a(s₍ᵢ₋₁₎, hₖ,ⱼ) ) / Σ exp( a(s₍ᵢ₋₁₎, hₖ,ⱼ′) )  for j′ = 1 to T
-      </pre>
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/stack-eq15.png" alt="stack-eq15" style="max-width: 30%; height: auto;">
+      </div> 
       <p>
         Here, a(s₍ᵢ₋₁₎, hₖ,ⱼ) is a soft-alignment scoring function measuring the similarity between the decoder hidden state at the previous time step (s₍ᵢ₋₁₎) and the encoder hidden state at time step j (hₖ,ⱼ). Empirically, our model performed marginally better when using the additive/concat scoring function, as seen in Bahdanau et al. (2015), compared to other functions like dot or 'general' (Luong et al., 2015) [10].
       </p>
       <p>
         In addition, our model utilizes attentional input-feeding, where context vectors generated at the previous time step (c₍ᵢ₋₁₎) are fed as inputs to the decoder at the current time step via concatenation with the current inputs (decoder hidden state from the previous time step, s₍ᵢ₋₁₎). This informs the model about prior alignment choices.
       </p>
-
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/stack-d2.png" alt="stack-d2" style="max-width: 80%; height: auto;">
+      </div>
+      <br> 
       <h3>Copying Mechanism</h3>
       <p>
         Similar to CopyRNN [12], our model adopts the copying mechanism proposed by Gu et al. (2016) [7]. This mechanism allows the model to generate keyphrases containing words not found in its vocabulary by using positional and syntactic information from the input text.
@@ -227,22 +236,25 @@ cᵢ = Σ (αᵢ,ⱼ * hₖ,ⱼ)  for j = 1 to T
       <p>
         By incorporating the copying mechanism, the conditional language model becomes a mixture of generative and copy components:
       </p>
-      <pre>
-p( yₜ | y₁,...,y₍ₜ₋₁₎, x ) = p<sub>g</sub>( yₜ | y₁,...,y₍ₜ₋₁₎, x ) + p<sub>c</sub>( yₜ | y₁,...,y₍ₜ₋₁₎, x )
-      </pre>
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/stack-eq16.png" alt="stack-eq16" style="max-width: 58%; height: auto;">
+      </div> 
       <p>
         Here, p<sub>g</sub>( yₜ | y₁,...,y₍ₜ₋₁₎, x ) denotes the probability of predicting the next word using the vocabulary, and p<sub>c</sub>( yₜ | y₁,...,y₍ₜ₋₁₎, x ) denotes the probability of predicting the next word using only the input text. The original authors defined the copy component as:
       </p>
-      <pre>
-p<sub>c</sub>( yₜ | y₁,...,y₍ₜ₋₁₎, x ) = (1/Z) * Σ [ exp( ψ<sub>c</sub>(xⱼ) ) ] for all xⱼ = yₜ, where xⱼ ∈ χ
-ψ<sub>c</sub>(xⱼ) = tanh( hₖ,ⱼ<sup>T</sup> * W<sub>c</sub> ) * sₜ
-      </pre>
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/stack-eq17.png" alt="stack-eq17" style="max-width: 50%; height: auto;">
+      </div> 
       <p>
         In the above, ψ<sub>c</sub>(xⱼ) is the score for copying the word xⱼ, W<sub>c</sub> is a learned weight matrix with dimensions d<sub>hₖ</sub> × d<sub>s</sub>, Z is the normalization term shared by both components, and χ is the set of unique words from the input text x. For further details, please refer to Gu et al. (2016) [7].
       </p>
       <p>
         Similar to the case with attention, we also perform input-feeding with the location-based context vector generated by the copying mechanism, along with input-feeding using the content-and-semantics-based context vector from the attention mechanism.
       </p>
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/stack-d3.png" alt="stack-d3" style="max-width: 100%; height: auto;">
+      </div>
+      <br> 
 
       <h2>Experiments</h2>
       <p>
@@ -277,63 +289,9 @@ p<sub>c</sub>( yₜ | y₁,...,y₍ₜ₋₁₎, x ) = (1/Z) * Σ [ exp( ψ<sub>
       <p>
         As comparative baselines, we tested several unsupervised methods in addition to the CopyRNN model proposed by [12]. The baselines were implemented using the <code>pke</code> Python module as proposed in [2], which included unsupervised methods such as TextRank [13], SingleRank [17], TopicRank [4], PositionRank [6], and MultipartiteRank [3], as well as supervised methods including KEA [18] and others. Results for several configurations (different depthwise operations) of our proposed model, AsymLSTM, are presented in Table 1.
       </p>
-      <div>
-        <table border="1" cellspacing="0" cellpadding="5">
-          <tr>
-            <th>Method</th>
-            <th>Top-5 F₁</th>
-            <th>Top-10 F₁</th>
-          </tr>
-          <tr>
-            <td>TextRank</td>
-            <td>0.0878</td>
-            <td>0.0794</td>
-          </tr>
-          <tr>
-            <td>SingleRank</td>
-            <td>0.0550</td>
-            <td>0.0536</td>
-          </tr>
-          <tr>
-            <td>TopicRank</td>
-            <td>0.0538</td>
-            <td>0.0516</td>
-          </tr>
-          <tr>
-            <td>MultipartiteRank</td>
-            <td>0.0874</td>
-            <td>0.0739</td>
-          </tr>
-          <tr>
-            <td>PositionRank</td>
-            <td>0.0755</td>
-            <td>0.0693</td>
-          </tr>
-          <tr>
-            <td>CopyRNN</td>
-            <td>0.4240</td>
-            <td>0.4157</td>
-          </tr>
-          <tr>
-            <td>AsymLSTM</td>
-            <td>0.4865</td>
-            <td>0.4759</td>
-          </tr>
-          <tr>
-            <td>AsymLSTM + DepthwiseSum</td>
-            <td>0.4920</td>
-            <td>0.4878</td>
-          </tr>
-          <tr>
-            <td><strong>AsymLSTM + DepthwiseMaxPool</strong></td>
-            <td><strong>0.5198</strong></td>
-            <td><strong>0.5136</strong></td>
-          </tr>
-        </table>
-        <p>
-          <em>Table 1: F₁-scores on the StackOverflow CQA dataset.</em>
-        </p>
-      </div>
+      <div style="display: flex; justify-content: center;">
+        <img src="../images/stack-table1.png" alt="stack-table1" style="max-width: 70%; height: auto;">
+      </div> 
       <p>
         Our results in Table 1 are generally consistent with those reported in [12], indicating that CopyRNN significantly outperforms existing unsupervised keyphrase extraction methods. Moreover, our proposed architecture achieves better F₁-scores at both top-5 and top-10 than CopyRNN (which was implemented using the hyperparameter settings reported by the authors). Here, "AsymLSTM" refers to our proposed architecture (described in section "Experimental Settings") where we initialize the decoder cell state using only the last encoder layer's final cell state. "AsymLSTM + DepthwiseSum/DepthwiseMaxPool" refers to the depthwise operation applied to the final encoder cell states as described in the methodology.
       </p>
