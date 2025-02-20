@@ -67,7 +67,7 @@ const posts = [
     date: "June 19, 2017",
     tags: ["RecSys", "ML"]
   }
-  // Add more posts here as needed
+  // Add more posts here as needed 
 ];
 
 function renderPosts(containerId, filterTag = null) {
