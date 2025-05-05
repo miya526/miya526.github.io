@@ -4,7 +4,7 @@ const posts = [
   {
     title: "Mental Models, Habits, and Life Principles That Can Be Useful",
     url: "posts/mental-models-habits-and-life-principles-that-can-be-useful.html",
-    snippet: "Summarizing practical, research-backed rules for better thinking, habits, decisions, relationships, and health.",
+    snippet: "Summarizing practical rules/principles for better thinking, habits, decisions, relationships, and health.",
     date: "May 4, 2025",
     tags: ["Life", "Psychology"]
   },
