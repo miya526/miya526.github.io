@@ -1,13 +1,6 @@
 // posts.js
 
 const posts = [
-  {
-    title: "Mental Models, Habits, and Life Principles That Can Be Useful",
-    url: "posts/mental-models-habits-and-life-principles-that-can-be-useful.html",
-    snippet: "Summarizing practical rules/principles for better thinking, habits, decisions, relationships, and health.",
-    date: "May 4, 2025",
-    tags: ["Life", "Psychology"]
-  },
   // post on deepseek
   {
     title: "Preserving Family Memories in the Digital Age with LLM",
@@ -15,6 +8,13 @@ const posts = [
     snippet: "Discover how to use LLM to preserve family memories, transforming audio, text, and visuals into legacy.",
     date: "December 20, 2024",
     tags: ["LLM", "ML", "Fun"]
+  },
+  {
+    title: "Mental Models, Habits, and Life Principles That Can Be Useful",
+    url: "posts/mental-models-habits-and-life-principles-that-can-be-useful.html",
+    snippet: "Summarizing practical rules/principles for better thinking, habits, decisions, relationships, and health.",
+    date: "November 5, 2024",
+    tags: ["Life", "Psychology"]
   },
   {
     title: "My 2 Cents on Preparing for LeetCode-Style Coding Interviews",
