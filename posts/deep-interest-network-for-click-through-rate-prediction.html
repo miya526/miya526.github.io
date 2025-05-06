@@ -23,7 +23,7 @@
   
   <!-- Sub-header for Post Page -->
   <div class="container sub-header">
-    <h2 class="sub-title">Paper Reading: Deep Interest Network for Click-Through Rate Prediction</h2>
+    <h2 class="sub-title">Paper Reading: Deep Interest Network for Click Through Rate Prediction</h2>
   </div>
   
   <!-- Main Content -->
@@ -37,13 +37,13 @@
     </div>
     
     <article class="post-content">
-        <p>This post dives into the groundbreaking <a href="https://arxiv.org/abs/1706.06978"><strong>Deep Interest Network (DIN)</strong> paper</a> from Alibaba. In this post, we’ll explore the key contributions of DIN, discuss its innovations, and share practical takeaways for building large-scale recommendation systems!</p>
+        <p>This post dives into the groundbreaking <a href="https://arxiv.org/abs/1706.06978"><strong>Deep Interest Network (DIN)</strong> paper</a> from Alibaba. In this post, well explore the key contributions of DIN, discuss its innovations, and share practical takeaways for building large scale recommendation systems!</p>
         
         <h2>Rethinking User Interest Representation</h2>
         
-        <p>Traditional CTR models follow an <strong>Embedding &amp; MLP</strong> paradigm: high-dimensional sparse features (e.g., user profiles, historical behaviors, ad features) are mapped into low-dimensional dense representations and then combined into a fixed-length vector. However, this approach compresses diverse user interests into a single static representation, which can miss the nuances of individual preferences.</p>
+        <p>Traditional CTR models follow an <strong>Embedding &amp; MLP</strong> paradigm: high dimensional sparse features (e.g., user profiles, historical behaviors, ad features) are mapped into low dimensional dense representations and then combined into a fixed length vector. However, this approach compresses diverse user interests into a single static representation, which can miss the nuances of individual preferences.</p>
         
-        <p><strong>DIN’s solution:</strong> Introduce a <strong>local activation unit</strong>—a form of attention mechanism—that computes a dynamic, ad-specific representation of user interests. Instead of simply averaging all historical behaviors, DIN selectively emphasizes those behaviors most relevant to the candidate ad. For example, if a user has browsed both clothing and electronics but is now shown an ad for a dress, DIN will assign higher weights to the past clothing-related behaviors.</p>
+        <p><strong>DIN’s solution:</strong> Introduce a <strong>local activation unit</strong>—a form of attention mechanism—that computes a dynamic, ad specific representation of user interests. Instead of simply averaging all historical behaviors, DIN selectively emphasizes those behaviors most relevant to the candidate ad. For example, if a user has browsed both clothing and electronics but is now shown an ad for a dress, DIN will assign higher weights to the past clothing related behaviors.</p>
         
         <div style="display: flex; justify-content: center;">
             <img src="../images/din-relevance.png" alt="din-relevance" style="max-width: 70%; height: auto;"> 
@@ -54,10 +54,10 @@
         <p>Let’s break down the key components of the DIN architecture:</p>
         
         <h3>1. Embedding Layer</h3>
-        <p>Each categorical feature—whether it’s user profile information, historical behaviors, or ad attributes—is transformed into a dense vector via an embedding lookup. For multi-hot inputs (e.g., a list of visited product IDs), traditional methods often use a simple average or sum pooling.</p>
+        <p>Each categorical feature—whether it’s user profile information, historical behaviors, or ad attributes—is transformed into a dense vector via an embedding lookup. For multi hot inputs (e.g., a list of visited product IDs), traditional methods often use a simple average or sum pooling.</p>
         
         <h3>2. Local Activation Unit (Attention Mechanism)</h3>
-        <p>DIN replaces the fixed pooling operation with an <strong>adaptive weighted pooling mechanism</strong>. A dedicated feed-forward network computes attention weights for each behavior, taking both the candidate ad’s embedding and the behavior’s embedding as inputs. This results in a user representation that is computed as:</p>
+        <p>DIN replaces the fixed pooling operation with an <strong>adaptive weighted pooling mechanism</strong>. A dedicated feed forward network computes attention weights for each behavior, taking both the candidate ad’s embedding and the behavior’s embedding as inputs. This results in a user representation that is computed as:</p>
         
         <div style="display: flex; justify-content: center;">
             <img src="../images/din-userrep.png" alt="din-userrep" style="max-width: 50%; height: auto;"> 
@@ -74,19 +74,19 @@
         <br>
         <h2>Training Innovations for Industrial Scale</h2>
         
-        <p>DIN is not only about a clever architecture—it also addresses several engineering challenges inherent in large-scale CTR prediction:</p>
+        <p>DIN is not only about a clever architecture—it also addresses several engineering challenges inherent in large scale CTR prediction:</p>
         
-        <h3>1. Mini-Batch Aware Regularization</h3>
-        <p>In industrial systems, the number of parameters (especially in the embedding layers) can reach hundreds of millions. Traditional ℓ₂ regularization is computationally expensive since it requires operations over the entire parameter space per mini-batch. DIN introduces a mini-batch aware regularization technique that only computes the ℓ₂ norm for features present in the current mini-batch. This greatly reduces computational overhead while effectively mitigating overfitting.</p>
+        <h3>1. Mini Batch Aware Regularization</h3>
+        <p>In industrial systems, the number of parameters (especially in the embedding layers) can reach hundreds of millions. Traditional ℓ₂ regularization is computationally expensive since it requires operations over the entire parameter space per mini batch. DIN introduces a mini batch aware regularization technique that only computes the ℓ₂ norm for features present in the current mini batch. This greatly reduces computational overhead while effectively mitigating overfitting.</p>
         
         <h3>2. Data Adaptive Activation Function (Dice)</h3>
-        <p>While PReLU is a popular activation function, it uses a fixed threshold (typically 0) to switch between linear activations. DIN proposes <strong>Dice</strong>, which adapts the rectified point based on the input’s distribution (mean and variance) within each mini-batch. This dynamic adjustment helps the network better handle the diverse and ever-changing nature of industrial data.</p>
+        <p>While PReLU is a popular activation function, it uses a fixed threshold (typically 0) to switch between linear activations. DIN proposes <strong>Dice</strong>, which adapts the rectified point based on the input’s distribution (mean and variance) within each mini batch. This dynamic adjustment helps the network better handle the diverse and ever changing nature of industrial data.</p>
         
         <div style="display: flex; justify-content: center;">
             <img src="../images/din-dice.png" alt="din-dice" style="max-width: 70%; height: auto;"> 
         </div>
         <br>
-        <h2>Empirical Success and Real-World Impact</h2>
+        <h2>Empirical Success and Real World Impact</h2>
         
         <p>DIN has been evaluated on multiple datasets—from public benchmarks like Amazon Electronics and MovieLens to a massive dataset from a large-scale industrial application with billions of samples. The results consistently show that DIN outperforms traditional methods and other deep learning models such as Wide&amp;Deep, PNN, and DeepFM.</p>
         
@@ -102,7 +102,7 @@
         <br>
         <p style="text-align: center; margin: 1rem 0;">----------</p>
         
-        <p>DIN demonstrates that attention mechanisms are key to tackling real-world challenges in CTR prediction. Leveraging dynamic attention not only refines user representations but also paves the way for future innovations in machine learning. As attention mechanisms continue to evolve, they will undoubtedly play a critical role in the next generation of deep learning systems.</p>
+        <p>DIN demonstrates that attention mechanisms are key to tackling real world challenges in CTR prediction. Leveraging dynamic attention not only refines user representations but also paves the way for future innovations in machine learning. As attention mechanisms continue to evolve, they will undoubtedly play a critical role in the next generation of deep learning systems.</p>
     </article>
 </main>
 

@@ -38,7 +38,7 @@
     
     <article class="post-content">
       <p>
-        Recommender systems are everywhere—from suggesting the next best TV series you’ll binge on, 
+        Recommender systems are everywhere, from suggesting the next best TV series you’ll binge on, 
         to showing you the perfect T-shirt you never knew you wanted. One notable approach that broke new ground in this field 
         is <strong>Wide &amp; Deep Learning</strong>, introduced by Cheng et al. in their 2016 paper, 
         <a href="https://arxiv.org/abs/1606.07792"><em>Wide &amp; Deep Learning for Recommender Systems</em></a>. If you’ve ever wondered how modern apps seamlessly mix “rules of thumb” 
@@ -52,21 +52,21 @@
       </p>
       <ul class="bullet-list">
         <li>
-          <strong>Memorization</strong>: Leveraging known associations or rules learned from historical data 
+          <strong>Memorization</strong>: Leveraging known association or rules learned from historical data 
           (e.g., “Users who clicked on sports shoes are also likely to buy socks”).
         </li>
         <li>
           <strong>Generalization</strong>: Capturing deeper patterns and extrapolating beyond the immediate training data 
-          (e.g., the model learning abstract features of products that might appeal to different segments of users).
+          (e.g, the model learning abstract features of products that might appeal to different segments of users).
         </li>
       </ul>
       <br>
       <p>
         Traditionally, linear models (like logistic regression or linear regression) do a great job at memorizing. 
-        They directly learn weights for feature-value pairs and can easily capture cross-features if hand-engineered carefully. 
+        They directly learn weights for feature value pairs and can easily capture cross features if hand engineered carefully. 
         However, they don’t always generalize to new or unseen combinations of features. Neural networks, on the other hand, 
         excel at discovering complex feature representations and generalizing beyond what’s explicitly observed. 
-        But they can sometimes struggle to pick up trivial but important rules if not fed the right inputs.
+        But they can sometimes struggle to pick up trivial but important rules if not fed right inputs.
       </p>
 
       <p>
@@ -75,22 +75,22 @@
         known feature interactions and discover new, abstract relationships in the data.
       </p>
 
-      <h2>2. Architecture at a Glance</h2>
+      <h2>2. Architecture at a glance</h2>
 
-      <p class="bullet-intro">The high-level idea is quite intuitive:</p>
+      <p class="bullet-intro">The high level idea is quite intuitive:</p>
       <ul class="bullet-list">
       <ol>
         <li>
           <strong>Wide Component</strong> (a linear model):
           <ul class="bullet-list">
-            <li>Takes cross-features as inputs and feeds them into a simple, linear layer.</li>
+            <li>Takes cross features as inputs and feeds them into a simple, linear layer.</li>
             <li>Responsible for memorizing explicit feature interactions found in historical data.</li>
           </ul>
         </li>
         <li>
-          <strong>Deep Component</strong> (a feed-forward neural network):
+          <strong>Deep Component</strong> (a feed forward neural network):
           <ul class="bullet-list">
-            <li>Learns dense, low-dimensional embeddings for sparse features (such as user IDs, product IDs, or categories).</li>
+            <li>Learns dense, low dimensional embeddings for sparse features (such as user ids, product ids, or categories).</li>
             <li>Passes those embeddings through multiple hidden layers (fully connected layers with ReLU activations).</li>
             <li>Responsible for generalizing to new or less frequently seen feature combinations.</li>
           </ul>
@@ -99,7 +99,7 @@
           <strong>Joint Training</strong>:
           <ul class="bullet-list">
             <li>The outputs of both the Wide and Deep components are combined (summed) to produce the final prediction.</li>
-            <li>The entire model is trained end-to-end using a single loss function (e.g., logistic loss for classification tasks).</li>
+            <li>The entire model is trained end to end using a single loss function (e.g., logistic loss for classification tasks).</li>
           </ul>
         </li>
       </ol>
@@ -111,8 +111,8 @@
       <p>For a logistic regression problem, the model’s prediction is:</p>
       <img src="../images/wide-deep-formula.png" alt="wide-deep-formula" style="max-width: 100%; height: auto;">
       <p>
-        This combination allows the model to latch onto known or easy-to-memorize associations while also uncovering 
-        new, non-linear patterns in the data.
+        This combination allows the model to latch onto known or easy to memorize associations while also uncovering 
+        new, non linear patterns in the data.
       </p>
 
       <h2>3. Key Contributions</h2>
@@ -128,16 +128,16 @@
         </li>
         <li>
           <strong>Handling Sparse Data:</strong><br>
-          The Wide part uses the FTRL algorithm with L1 regularization to keep the model lean by zeroing out unimportant weights. Meanwhile, the Deep part uses AdaGrad to effectively learn from high-dimensional data.
+          The Wide part uses the FTRL algorithm with L1 regularization to keep the model lean by zeroing out unimportant weights. Meanwhile, the Deep part uses AdaGrad to effectively learn from high dimensional data.
         </li>
         <li>
-          <strong>Smart Feature Integration:</strong><br>
-          The model brings together raw and transformed features—from basic numerical values to complex cross-products—providing a well-rounded view of user behavior for better recommendations.
+          <strong>Smart Feature integration:</strong><br>
+          The model brings together raw and transformed features from basic numerical values to complex cross products, providing a well rounded view of user behavior for better recommendations.
         </li>
       </ul>
     <br>
 
-      <h2>4. Real-World Applications</h2>
+      <h2>4. Real World Applications</h2>
 
       <p class="bullet-intro">
         In the paper, they applied Wide &amp; Deep to power the recommendation system for the Google Play app store. 
@@ -145,7 +145,7 @@
       <ul class="bullet-list">
         <li>
           <strong>Data &amp; Training:</strong><br>
-          User behavior and app impression data generate training examples with binary labels. Categorical features are mapped to integer IDs and continuous features normalized. The model learns 32-dimensional embeddings, which are concatenated with dense features and passed through ReLU layers to a logistic output. A warm-start system reuses embeddings and weights for efficient retraining on billions of examples.
+          User behavior and app impression data generate training examples with binary labels. Categorical features are mapped to integer IDs and continuous features normalized. The model learns 32 dimensional embeddings, which are concatenated with dense features and passed through ReLU layers to a logistic output. A warm-start system reuses embeddings and weights for efficient retraining on billions of examples.
         </li>
         <li>
           <strong>Model Serving:</strong><br>
@@ -153,7 +153,7 @@
         </li>
         <li>
           <strong>Impact:</strong><br>
-          In A/B tests, the Wide &amp; Deep model improved app acquisition rates by +3.9% compared to a wide-only baseline and +1% over a deep-only model, demonstrating its effective blend of memorization and generalization in real-world traffic.
+          In A/B tests, the Wide &amp; Deep model improved app acquisition rates by +3.9% compared to a wide only baseline and +1% over a deep only model, demonstrating its effective blend of memorization and generalization in real world traffic.
         </li>
       </ul>
       <img src="../images/wide-deep-pipeline.png" alt="wide-deep-pipeline" style="max-width: 100%; height: auto;">
@@ -163,7 +163,7 @@
       <p style="text-align: center; margin: 1rem 0;">----------</p>
 
       <p>
-        Wide & Deep Learning beautifully mirrors how we, as humans, process information. On one hand, we rely on our “memorized” knowledge—straightforward facts, associations, and past experiences—to guide familiar decisions. On the other hand, we use creativity and higher-level thinking to handle new or less obvious challenges. By blending these two paradigms into a single framework, Wide & Deep Learning gives recommender systems the best of both worlds: the reliability of established truths and the flexibility to discover novel insights.
+        Wide & Deep Learning beautifully mirrors how we, as humans, process information. On one hand, we rely on our “memorized” knowledge—straightforward facts, associations, and past experiences—to guide familiar decisions. On the other hand, we use creativity and higher level thinking to handle new or less obvious challenges. By blending these two paradigms into a single framework, Wide & Deep Learning gives recommender systems the best of both worlds: the reliability of established truths and the flexibility to discover novel insights.
       </p>
 
     </article>

@@ -37,22 +37,22 @@
     </div>
     
     <article class="post-content">
-        <p>YouTube’s recommendation system is among the largest and most sophisticated in the world. In their <a href="https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/45530.pdf">2016 paper</a>, the YouTube team detailed how deep learning revolutionized their approach to delivering personalized video recommendations at massive scale. In this post, we’ll walk through the two-stage architecture—candidate generation and ranking—and highlight key engineering choices drawn directly from the paper.</p>
+        <p>YouTube’s recommendation system is among the largest and most sophisticated in the world. In their <a href="https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/45530.pdf">2016 paper</a>, the YouTube team detailed how deep learning revolutionized their approach to delivering personalized video recommendations at massive scale. In this post, we’ll walk through the two stage architecture candidate generation and ranking and highlight key engineering choices drawn directly from the paper.</p>
         <div style="display: flex; justify-content: center;">
             <img src="../images/youtube-dl.png" alt="youtube-dl" style="max-width: 50%; height: auto;">
           </div>
-        <h2>1. The Two-Stage Recommendation Pipeline</h2>
+        <h2>1. The Two Stage Recommendation Pipeline</h2>
         
         <h3>Candidate Generation</h3>
         
-        <p><strong>Problem Formulation:</strong> The candidate generation step poses the recommendation task as an extreme multi-class classification problem. In other words, given a user and their context, the model predicts the next video watch from a corpus of millions of videos. Mathematically, it learns to model:</p>
+        <p><strong>Problem Formulation:</strong> The candidate generation step poses the recommendation task as an extreme multi class classification problem. In other words, given a user and their context, the model predicts the next video watch from a corpus of millions of videos. Mathematically, it learns to model:</p>
         <div style="display: flex; justify-content: center;">
             <img src="../images/youtube-cdd-formula.png" alt="youtube-cdd-formula" style="max-width: 50%; height: auto;">
           </div>
         
-        <p>where <em>u</em> is the user-context embedding and <em>v<sub>i</sub></em> is the embedding of video <em>i</em>.</p>
+        <p>where <em>u</em> is the user context embedding and <em>v<sub>i</sub></em> is the embedding of video <em>i</em>.</p>
         
-        <p><strong>Model Architecture:</strong> Inspired by techniques from language models, YouTube maps sparse inputs (like video IDs and search tokens) into dense embeddings. These embeddings—often averaged for variable-length histories—are concatenated with additional signals (e.g., demographic data) and passed through several layers of ReLUs.</p>
+        <p><strong>Model Architecture:</strong> Inspired by techniques from language models, YouTube maps sparse inputs (like video ids and search tokens) into dense embeddings. These embeddings—often averaged for variable length historie —are concatenated with additional signals (e.g., demographic data) and passed through several layers of ReLUs.</p>
         
         <div style="display: flex; justify-content: center;">
             <img src="../images/youtube-retrieval.png" alt="youtube-retrieval" style="max-width: 100%; height: auto;">
@@ -64,11 +64,11 @@
         
         <h3>Ranking</h3>
         
-        <p>Once a few hundred candidate videos are selected, a second layer—referred to as the ranking model—assigns a fine-grained score to each candidate.</p>
+        <p>Once a few hundred candidate videos are selected, a second layer referred to as the ranking model assigns a fine grained score to each candidate.</p>
         
         <p class="bullet-intro"><strong>Richer Feature Set:</strong> The ranking model incorporates additional features such as:</p>
         <ul class="bullet-list">
-          <li><strong>Impression Video ID Embedding:</strong> The embedding for the candidate video being scored.</li>
+          <li><strong>Impression Video id Embedding:</strong> The embedding for the candidate video being scored.</li>
           <li><strong>User Watch History:</strong> Averaged embeddings of recently watched videos.</li>
           <li><strong>Search History and Demographics:</strong> Additional contextual signals.</li>
           <li><strong>Behavioral Signals:</strong> Features like “time since last watch” and the number of previous impressions, which help prevent repetitive recommendations.</li>
@@ -77,22 +77,22 @@
         
         <p><strong>Optimizing for Engagement:</strong> Unlike the candidate generation stage which predicts the next watch, the ranking model is trained to optimize for “expected watch time per impression.” This is achieved via a modified logistic regression where positive examples (clicked videos) are weighted by their actual watch time. The final activation uses an exponential function to produce odds that closely estimate expected watch time.</p>
                 
-        <p><strong>Feature Engineering and Normalization:</strong> Continuous features are normalized to the [0, 1) interval using cumulative distribution functions. In some cases, powers (e.g., square root, square) of the normalized features are also input to allow the network to learn non-linear relationships easily.</p>
+        <p><strong>Feature Engineering and Normalization:</strong> Continuous features are normalized to the [0, 1) interval using cumulative distribution functions. In some cases, powers (e.g., square root, square) of the normalized features are also input to allow the network to learn non linear relationships easily.</p>
         
         <div style="display: flex; justify-content: center;">
             <img src="../images/youtube-ranking.png" alt="youtube-ranking" style="max-width: 100%; height: auto;">
           </div>
 
-        <h2>2. Lessons and Engineering Trade-Offs</h2>
+        <h2>2. Lessons and Engineering Trade Offs</h2>
         
         <p class="bullet-intro">The paper provides a host of practical lessons that highlight the art of building scalable recommendation systems:</p>
         
         <ul class="bullet-list">
           <li>
-            <strong>Handling Scale and Sparsity:</strong> Transforming recommendations into a multi-class classification problem means dealing with millions of classes. The use of candidate sampling and approximate nearest neighbor search is key to meeting both training and serving efficiency.
+            <strong>Handling Scale and Sparsity:</strong> Transforming recommendations into a multi class classification problem means dealing with millions of classes. The use of candidate sampling and approximate nearest neighbor search is key to meeting both training and serving efficiency.
           </li>
           <li>
-            <strong>Freshness through “Example Age”:</strong> To capture the importance of fresh content, a feature called “Example Age” is included during training. This feature helps the model learn the time-dependent popularity of videos, yet at serving time, it is set to zero (or slightly negative) to focus on the most current content.
+            <strong>Freshness through “Example Age”:</strong> To capture the importance of fresh content, a feature called “Example Age” is included during training. This feature helps the model learn the time dependent popularity of videos, yet at serving time, it is set to zero (or slightly negative) to focus on the most current content.
           </li>
           <div style="display: flex; justify-content: center;">
             <img src="../images/example-age.png" alt="example-age" style="max-width: 100%; height: auto;">
@@ -101,7 +101,7 @@
             <strong>Balanced Training Examples:</strong> Rather than letting highly active users dominate the loss, a fixed number of training examples per user is generated. This equal weighting is critical for ensuring the model generalizes well.
           </li>
           <li>
-            <strong>Designing for Real-World Engagement:</strong> The shift from optimizing click-through rates to expected watch time reflects a deeper understanding: longer watch time is a better proxy for user satisfaction and long-term engagement.
+            <strong>Designing for Real World Engagement:</strong> The shift from optimizing click through rates to expected watch time reflects a deeper understanding: longer watch time is a better proxy for user satisfaction and long term engagement.
           </li>
           <li>
             <strong>Impact of Network Depth and Width:</strong> Experiments in the paper show that adding depth (more hidden layers) and increasing layer width improves performance. However, this must be balanced against increased serving latency and CPU costs.

@@ -57,7 +57,7 @@
       
         <h2>Building a Simulated Dataset</h2>
 <p>
-  Because obtaining real individual-level SNP data with disease labels is challenging, I simulated datasets using information from the <a href="https://www.ebi.ac.uk/gwas/" target="_blank">GWAS catalog</a>. For each disease—Alzheimer’s (EFO0000249), coronary heart disease (EFO0001645), type 1 diabetes (EFO0001359), hypertension (EFO0000537), and rheumatoid arthritis (EFO0000685)—I extracted key data points: the variant name, risk allele, risk allele frequency (RAF), and beta value (the effect size).
+  Because obtaining real individual level SNP data with disease labels is challenging, I simulated datasets using information from the <a href="https://www.ebi.ac.uk/gwas/" target="_blank">GWAS catalog</a>. For each disease—Alzheimer’s (EFO0000249), coronary heart disease (EFO0001645), type 1 diabetes (EFO0001359), hypertension (EFO0000537), and rheumatoid arthritis (EFO0000685)—I extracted key data points: the variant name, risk allele, risk allele frequency (RAF), and beta value (the effect size).
 </p>
 <p>
   The simulation involved creating a population of 10,000 individuals with SNP data as features and assigning each a disease risk label (low, medium, or high). To ensure compatibility with 23andMe raw data, I intersected the SNPs in the GWAS catalog with those available from 23andMe. A separate GWAS was then conducted on the simulated data to identify the most relevant SNPs for each disease, dispersing them throughout the population based on their RAF.
@@ -97,11 +97,11 @@
             <strong>Rheumatoid Arthritis:</strong> Similarly modeled in four age groups, this condition’s model achieved an F1 score of 0.78.
           </li>
         </ul>
-        <p>Using XGBoost—a powerful algorithm known for capturing non-linear patterns—proved effective in learning complex interactions among SNPs.</p>
+        <p>Using XGBoost—a powerful algorithm known for capturing non linear patterns—proved effective in learning complex interactions among SNPs.</p>
       
         <h2>Results and Reflections</h2>
         <p>Models built using all features from the GWAS catalog performed best. However, when restricted to the SNPs available from 23andMe, performance dipped slightly. For example, while the overall coronary heart disease model maintained high accuracy, models for type 1 diabetes and rheumatoid arthritis faced more challenges with the limited feature set.</p>
-        <p>These differences underscore the balance between data richness and real-world applicability. Although the simulated data offers valuable insights, applying these models to actual genetic datasets will be the ultimate test.</p>
+        <p>These differences underscore the balance between data richness and real world applicability. Although the simulated data offers valuable insights, applying these models to actual genetic datasets will be the ultimate test.</p>
         <div style="display: flex; justify-content: center;">
             <img src="../images/gwas-3.png" alt="gwas-3" style="max-width: 70%; height: auto;"> 
         </div>
