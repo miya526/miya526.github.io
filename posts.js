@@ -10,8 +10,8 @@ const posts = [
     tags: ["LLM", "ML", "Fun"]
   },
   {
-    title: "Mental Models, Habits, and Life Principles That Can Be Useful",
-    url: "posts/mental-models-habits-and-life-principles-that-can-be-useful.html",
+    title: "Mental Models, Habits, and Principles That Can Be Useful",
+    url: "posts/mental-models-habits-and-principles-that-can-be-useful.html",
     snippet: "Summarizing practical rules/principles for better thinking, habits, decisions, relationships, and health.",
     date: "November 5, 2024",
     tags: ["Life", "Psychology"]
