@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>The AI Cold War Heats Up: DeepSeek V3 and Speculation on the Future - Allen's Notes</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      fetch('../header.html')
+        .then(response => response.text())
+        .then(data => { document.getElementById('header').innerHTML = data; })
+        .catch(error => console.error('Error loading header:', error));
+      fetch('../footer.html')
+        .then(response => response.text())
+        .then(data => { document.getElementById('footer').innerHTML = data; })
+        .catch(error => console.error('Error loading footer:', error));
+    });
+  </script>
+</head>
+<body>
+  <header id="header"></header>
+
+  <div class="container sub-header">
+    <h2 class="sub-title">The AI Cold War Heats Up: DeepSeek V3 and Speculation on the Future</h2>
+  </div>
+
+  <main class="container">
+    <div class="post-meta">
+      <div class="post-tags">
+        <a href="../tag.html?tag=LLM" class="tag">LLM</a>
+        <a href="../tag.html?tag=ML" class="tag">ML</a>
+      </div>
+      <div class="post-date">Jan 20, 2025</div>
+    </div>
+
+    <article class="post-content">
+        <p>
+            In late December 2024, DeepSeek dropped V3, shaking up the AI landscape in a big way. This wasn't just another technical milestone. It signaled how fierce and intense the AI race had become, often described as a modern day Cold War. Overnight, a relatively unknown player from China suddenly found itself playing in the same league as the heavyweights like OpenAI, Google, and Meta, directly challenging a previously US-dominated arena. Game on!
+        </p>
+        <p>
+            In this post, I will try to highlight the key points from the DeepSeek V3 paper and spend some time speculating on how the future will unfold.
+        </p>
+
+        <h2> Breaking Down DeepSeek V3</h2>
+        <p> IMO, what was most interesting in the <a href="https://arxiv.org/abs/2412.19437">DeepSeek V3 paper</a> were the architectural innovations and training efficiency breakthroughs, so I’m mostly going to focus on those two parts.</p>
+        <h3>Architecture Highlights</h3>
+        <p class="bullet-intro"><strong>1. Mixture of Experts (MoE)</strong></p>
+        <ul class="bullet-list">
+            <li>
+                671B total parameters, but only 37B are activated per token. This allows DeepSeek V3 to massively scale up model capacity without scaling up compute proportionally.
+            </li>
+            <li>
+                The model includes 128 expert layers, and each layer contains 16 non shared experts and 2 shared experts. The shared experts act like generalists that are always active, providing a strong foundation across all inputs.
+            </li>
+            <li>
+                Instead of a softmax gating mechanism (which tends to concentrate tokens into a few experts), DeepSeek V3 uses a sigmoid based gating function. This provides smoother token expert assignment and encourages more diverse routing.
+            </li>
+            <li>
+                The routing policy follows a "route-to-top-2" strategy. Each token is processed by the top 2 experts based on their gating scores, striking a balance between specialization and redundancy.
+            </li>
+            <li>
+                Crucially, no tokens are dropped during training or inference. This is a major step forward from previous MoE implementations (like Switch Transformer), where overloaded experts would force token dropping, hurting model consistency.
+            </li>
+          </ul>
+          <br>
+          <p class="bullet-intro"><strong>2. Auxiliary-loss-free Load Balancing</strong></p>
+        <ul class="bullet-list">
+            <li>
+                Most MoE systems require an auxiliary loss to penalize unbalanced expert usage, but this can come at the cost of model performance.
+            </li>
+            <li>
+                DeepSeek V3 avoids this by introducing a clever bias based system: if an expert is overused in the previous batch, its gating bias is reduced in the next round, making it less likely to be selected. Underused experts get a boost.
+            </li>
+            <li>
+                This dynamic adjustment leads to organic load balancing without needing extra loss terms or hand tuned hyperparameters. It’s more stable and computationally efficient.
+            </li>
+            <li>
+                A minimal sequence level auxiliary loss is used only as a safety net to prevent entire sequences from collapsing onto the same expert set low enough to not interfere with learning.
+            </li>
+        </ul>   
+        <br>     
+        <p class="bullet-intro"><strong>3. Multi-Head Latent Attention (MLA)</strong></p>
+        <ul class="bullet-list">
+            <li>
+                MLA is DeepSeek's solution to the ballooning memory cost of long context transformers. It compresses the key and value vectors used in attention by projecting them into a smaller latent space.
+            </li>
+            <li>
+                During attention computation, the model stores these compact "latent" representations instead of full sized KV tensors, massively reducing the KV cache memory usage during generation.
+            </li>
+            <li>
+                When needed, these latents are up projected back into full size vectors to compute attention, enabling DeepSeek V3 to support context windows up to 128K tokens without bottlenecking GPU memory.
+            </li>
+            <li>
+                Importantly, MLA is designed to preserve Rotary Positional Embeddings (RoPE), ensuring the model still retains a robust sense of sequence and order even after compression.
+            </li>
+        </ul>  
+        <div style="display: flex; justify-content: center;">
+            <img src="../images/deepseek-v3-arch.png" alt="deepseek-v3-arch" style="max-width: 100%; height: auto;"> 
+        </div>
+        <br>
+        <h3>Training Efficiency</h3>
+        <p class="bullet-intro"><strong>1. Multi-Token Prediction (MTP)</strong></p>
+        <ul class="bullet-list">
+            <li>
+                Rather than predicting just the next token, DeepSeek V3 is trained to predict up to 6 future tokens simultaneously at each position.
+            </li>
+            <li>
+                Maintains full autoregressive causality, meaningeach future token prediction only depends on the current and prior tokens, preserving the model’s left to right generative structure.
+            </li>
+            <li>
+                This design densifies the training signal (you get more gradient updates per token), improving data and compute efficiency.
+            </li>
+            <li>
+                Importantly, it enables speculative decoding during inference: V3 can “guess” a block of tokens at once, then verify them using a smaller model or filter.
+            </li>
+          </ul>
+          <br>
+          <p class="bullet-intro"><strong>2. Massive Scale Training</strong></p>
+        <ul class="bullet-list">
+            <li>
+                Trained on a whopping 14.8 trillion tokens, spanning code, math, multilingual corpora, and reasoning tasks. I would say this is an extremely broad and deep dataset, even compared to others.
+            </li>
+            <li>
+                The model consumed 2.788 million GPU hours using NVIDIA H800s, suggesting extremely high throughput training and solid infra scaling.
+            </li>
+            <li>
+                Entire training was done in FP8 precision, enabled by a custom mixed precision strategy, where sensitive operations (like accumulation) retain higher precision, while most compute heavy layers are fully FP8. This slashes memory usage and boosts speed without destabilizing training!
+            </li>
+          </ul> 
+          <br>
+          <p class="bullet-intro"><strong>3. DualPipe & Custom Infra Stack</strong></p>
+          <ul class="bullet-list">
+              <li>
+                DeepSeek implemented a DualPipe system, designed to overlap computation with communication across pipeline stages. This minimizes idle time and keeps GPUs busy.
+              </li>
+              <li>
+                They use 16 pipeline stages combined with 8 way expert parallelism. Experts are distributed across GPUs and activated selectively using all to all routing.
+              </li>
+              <li>
+                These op eng also built custom CUDA kernels for all to all expert communication to minimize latency and avoid GPU bottlenecks, which is crucial in large scale MoE training.
+              </li>
+              <li>
+                The model was trained without needing tensor parallelism, thanks to its MoE structure. Each expert can be trained on a single GPU node, simplifying scaling and reducing engineering complexity.
+              </li>
+            </ul>  
+            <div style="display: flex; justify-content: center;">
+                <img src="../images/deepseek-mtp.png" alt="deepseek-mtp" style="max-width: 100%; height: auto;"> 
+            </div>
+            <br>
+            And the evaluation results compared to other open (and even closed) models were great!
+            <div style="display: flex; justify-content: center;">
+                <img src="../images/deepseek-eval.png" alt="deepseek-eval" style="max-width: 100%; height: auto;"> 
+            </div>
+        <br>
+        <h2>Looking Ahead</h2>
+        <p>All of this is just my own speculation. Please don’t read it as fact!</p>
+        <p>The launch of DeepSeek V3 proves that real progress now requires innovation in the smaller components and not just scaling up parameters and throwing more GPUs at the problem. Since it's a model out of China, I imagine a lot of people in U.S. tech companies are asking themselves why their own teams didn’t do the same. We’re entering a phase where top talent at these companies will go all in with long hours and high pressure to compete with rival model creators. Each company will take turns dropping their latest model, with slightly better results than the last. Deadlines will drive the work. The culture inside these companies will shift dramatically.</p>
+        <p>Within the U.S., companies aren’t collaborating like it’s a national effort; this is market level competition. Still, we’ll start to see alliances form. Some will be between U.S. companies, others international. Eventually, the ecosystem will fragment: a few big alliances, and a bunch of smaller ones. These alliances matter. They’ll pool compute, money, and diverse data to train together. Everyone wants to be the first to AGI, so we’ll enter a phase of hyper spending, where profits no longer justify the cost. That’ll crush some of the smaller players and alliances, but the big ones will absorb them. I wouldn’t be surprised if trillions of dollars are spent building better infrastructure and training bigger models. This will ripple through the economy. Either the money dries up first, or we hit a tech plateau.</p>
+        <p>Because it’s so hard to know how close we actually are to AGI and the definition of AGI itself keeps shifting. I think the money issue will hit first. From a technical POV, it’s still true that more parameters and more GPUs generally give you a better model. Even if a company comes up with a brilliant architectural innovation, that advantage won’t last. Knowledge wants to flow. Others will catch up. To protect their lead, alliances will scoop up GPUs, build closed systems, and enforce non compete clauses to stop talent from jumping ship. We’ll start seeing talent treated like nuclear scientists in the 1900s, heavily recruited, tightly controlled, maybe even monitored.</p>
+        <p>And then there’s the government. Governments will start getting more involved, pouring in funding, but also attaching strings. That money has to come from somewhere. Either they print more, or cut other parts of the budget. Regulation will increase. Governments will start controlling who gets to work on what. LLM development could eventually become classified as top secret. And if someone working on these models wants to leave the country and work for another alliance? That could turn into a national security concern. Depending on where the major alliances cluster, governments might start favoring closed models over open ones. Less transparency, sure, but more control over the secret sauce.</p>
+    <p>Even in a world of increasing government intervention, most people will likely still have access to some version of LLMs. We're already seeing these models begin to replace humans in certain areas- they can write more clearly, explain concepts better, and handle complex tasks efficiently. As AI continues to advance, it's inevitable that these models will surpass human capabilities across many creative and intellectual domains. One example is entertainment: in the future, AI could be generating high quality movies, music, games, and stories almost entirely autonomously. Another example is coding: at many tech companies, AI already generates 20%+ of the codebase.</p>
+   <p>Currently, the quality of an AI generated product heavily depends on human prompts and guidance. But looking ahead, these models will gain greater autonomy in the creative process, needing less and less human input to produce sophisticated results. Eventually, we might reach a point where most of the content we consume, whether it's news articles, music playlists, posts on social media, is primarily AI generated. As the need for direct human involvement shrinks, we could see a corresponding decline in our own creative and decision making skills. After all, if you rely constantly on something else to generate ideas and make decisions, your own ability to do so inevitably weakens.</p>
+    <p>This shift brings significant social and economic implications. Unemployment could rise dramatically as white collar jobs become automated. With higher unemployment, society might experience increased discontent and unrest. People could demand radical changes or even push for revolution, as traditional structures of meaning, work, and value become disrupted. Increasingly, we might find ourselves relying on AI models not just for productivity, but for everyday decisions, both small and large. On a broader scale, governments and institutions could start using AI to manage societal choices, policies, and resource allocation. If that happens, we might find ourselves living in a reality resembling something like Aldous Huxley’s "Brave New World," where society is comfortable but largely passive, guided by external algorithms rather than human insight. Such a profound shift in our values and daily lives wouldn't happen overnight; it would likely unfold gradually, taking hold across generations rather than years.</p>
+    <p>However, there's another significant frontier to consider: the physical world. Today, advancements in robotics lag far behind AI developments. Robots still struggle with basic physical tasks that humans handle effortlessly. But AI might soon change that. As these models become increasingly capable, they could accelerate breakthroughs in robotics and other physical technologies. AI can help solve some of the fundamental problems holding robotics back, whether it’s improving the agility and adaptability of robots or making them more intelligent in navigating real world environments. Eventually, we might see AI powered robotics achieve parity with their digital counterparts, unlocking vast possibilities: autonomous manufacturing, fully robotic logistics systems, AI driven medical devices, and perhaps even everyday tasks handled seamlessly by robots in our homes.</p>
+    <p>Then comes the harder question: What do humans do? What is our role when AI systems can think faster, create better, and eventually act more skillfully in the physical world than we can? For a long time, the answer was: “Well, AI can’t build or move things like humans.” But once that gap closes, once robots can handle tools, navigate the physical world, and perform hands, on tasks as reliably as software handles information, we’re forced to confront a deeper, more existential issue. If AI can outperform us intellectually and physically, what’s left for us to own?</p>
+    <p>Some will say the human role shifts to supervision, direction, or alignment, guiding these systems toward values we choose. But even that assumes we stay relevant in a loop that’s closing quickly. If AI can generate better strategies, better designs, even better moral arguments, it’s unclear why it would need our oversight for long. And if we try to artificially preserve a role limiting AI’s capabilities just to “leave something for humans”. We’re no longer optimizing for progress, but for comfort. So maybe the real answer isn’t functional, but philosophical. Maybe human value will no longer come from what we do, but from what we are. Our relationships, our stories, our capacity to feel, to care, to experience reality in messy, irrational, beautiful ways. These aren’t skills to compete on but aspects of being that don’t need to be outperformed.</p>
+    <p>That said, a lot depends on how the transition is handled. If society clings to productivity and labor as the only source of worth, then yes we're in for a crisis. But if we can shift our frameworks, rethinking education, work, creativity, purpose,there’s a path to something better. A world where humans aren't racing against machines, but living alongside them, freed from many of the constraints that used to define our value.</p>
+    <p>The challenge isn’t just technical anymore. It’s emotional, cultural, spiritual. And it’s one we’ll probably face sooner than we expect.</p>
+</article>
+        </main>
+      
+        <footer id="footer"></footer>
+      </body>
+      </html>

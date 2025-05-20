@@ -1,7 +1,13 @@
 // posts.js
 
 const posts = [
-  // post on deepseek
+  {
+    title: "The AI Cold War Heats Up: DeepSeek V3 and Speculation on the Future",
+    url: "posts/the-ai-cold-war-heats-up-deepseek-v3-and-speculation-on-the-future.html",
+    snippet: "Talk about DeepSeek V3 and my speculation on the future of the AI race",
+    date: "January 20, 2025",
+    tags: ["LLM", "ML"]
+  },
   {
     title: "Preserving Family Memories in the Digital Age with LLM",
     url: "posts/preserving-family-memories-in-the-digital-age-with-llm.html",
