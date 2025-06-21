@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Allen's Notes - Posts</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script src="posts.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      fetch('header.html')
+        .then(response => response.text())
+        .then(data => { document.getElementById('header').innerHTML = data; })
+        .catch(error => console.error('Error loading header:', error));
+      fetch('footer.html')
+        .then(response => response.text())
+        .then(data => { document.getElementById('footer').innerHTML = data; })
+        .catch(error => console.error('Error loading footer:', error));
+      
+      renderPosts("posts-container");
+    });
+  </script>
+</head>
+<body>
+  <header id="header"></header>
+  
+  <div class="container sub-header">
+    <h2 class="sub-title">Posts</h2>
+  </div>
+  
+  <main class="container">
+    <section id="posts-container" class="posts">
+    </section>
+  </main>
+  
+  <footer id="footer"></footer>
+</body>
+</html>

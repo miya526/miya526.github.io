@@ -5,33 +5,42 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="css/style.css">
-
-  <script src="posts.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       fetch('header.html')
         .then(response => response.text())
         .then(data => { document.getElementById('header').innerHTML = data; })
         .catch(error => console.error('Error loading header:', error));
+      
       fetch('footer.html')
         .then(response => response.text())
         .then(data => { document.getElementById('footer').innerHTML = data; })
         .catch(error => console.error('Error loading footer:', error));
-      
-      renderPosts("posts-container");
     });
   </script>
 </head>
 <body>
   <header id="header"></header>
   
+  <!-- Sub-header for About
   <div class="container sub-header">
-    <h2 class="sub-title">Posts</h2>
-  </div>
+    <h2 class="sub-title">About</h2>
+  </div> -->
   
+  <!-- Main Content -->
   <main class="container">
-    <section id="posts-container" class="posts">
-    </section>
+    <p class="about-paragraph">
+      Hey there, I'm Allen and this is where I share thoughts and learnings (when I remember). I'm impressed you found this tucked away spot on the internet!
+    </p>
+    <p class="about-paragraph">
+      I was born in Japan, raised mostly in China, and moved to New York for high school. I earned my Bachelor's and Master's degrees in Computer Science from UCLA, and now I'm living and working in the Bay Area. I speak English, Chinese, and some Japanese, which has allowed me to develop an international perspective on things and opened up different opportunities.    </p>
+    <p class="about-paragraph">
+      For work, I do mostly ML/AI stuff. Right now, I work on recsys at Meta. Before that, I worked on ads targeting/recsys at TikTok, fraud/risk/integrity ml at Mercari, various ML and product initiatives at startup, etc.
+    </p>
+    <p class="about-paragraph">
+      If you have questions or just want to chat or connect, you can reach out via 
+      <a href="https://www.linkedin.com/in/allenmiyazawa" target="_blank">LinkedIn</a> or send an email to allenmiyazawa AT gmail DOT com.
+    </p>
   </main>
   
   <footer id="footer"></footer>
